@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 — Connecting Mobile Devices — CompTIA A+ 220-1201</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#8ab4f8; --red:#f28b82; --yellow:#fdd663; --green:#81c995; --purple:#c58af9;
+    --ink:#e8eaed; --sub:#9aa0a6; --paper:#232427; --bg:#131417; --line:#3c4043;
+    --card-shadow: 0 1px 2px rgba(0,0,0,.5), 0 2px 10px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{ margin:0; font-family:'Roboto', Arial, sans-serif; background:var(--bg); color:var(--ink); line-height:1.65; overflow-x:hidden; }
+  h1,h2,h3,.slide-title{ font-family:'Google Sans','Roboto',Arial,sans-serif; }
+  img{max-width:100%;}
+  a:focus-visible, button:focus-visible{ outline:2px solid #1a73e8; outline-offset:2px; }
+  .si{ font-family:'Noto Sans Sinhala','Roboto',sans-serif; }
+
+  .mobile-bar{ display:none; position:sticky; top:0; z-index:40; align-items:center; justify-content:space-between; background:var(--paper); border-bottom:1px solid var(--line); padding:12px 16px; }
+  .mobile-bar .m-title{ font-family:'Google Sans',sans-serif; font-weight:700; font-size:14.5px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .menu-btn{ display:flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:10px; border:1px solid var(--line); background:var(--paper); flex:none; cursor:pointer; padding:0; }
+  .menu-btn span, .menu-btn span::before, .menu-btn span::after{ content:""; display:block; width:18px; height:2px; background:var(--ink); position:relative; transition:transform .2s ease, opacity .2s ease; }
+  .menu-btn span::before{ position:absolute; top:-6px; } .menu-btn span::after{ position:absolute; top:6px; }
+  .menu-btn[aria-expanded="true"] span{ background:transparent; }
+  .menu-btn[aria-expanded="true"] span::before{ top:0; transform:rotate(45deg); background:var(--ink); }
+  .menu-btn[aria-expanded="true"] span::after{ top:0; transform:rotate(-45deg); background:var(--ink); }
+  .toc-backdrop{ display:none; position:fixed; inset:0; background:rgba(32,33,36,.45); z-index:45; }
+  .toc-backdrop.show{ display:block; }
+
+  .hero{ background:linear-gradient(120deg,#1a73e8 0%, #7B61FF 45%, #EA4335 100%); color:#fff; padding:56px 24px 40px; position:relative; overflow:hidden; }
+  .hero::after{ content:""; position:absolute; right:-60px; top:-60px; width:280px;height:280px;border-radius:50%; background:rgba(255,255,255,.08); pointer-events:none; }
+  .hero::before{ content:""; position:absolute; left:10%; bottom:-120px; width:220px;height:220px;border-radius:50%; background:rgba(255,255,255,.07); pointer-events:none; }
+  .hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1;}
+  .eyebrow{ display:inline-block; font-size:12px; letter-spacing:.14em; text-transform:uppercase; background:rgba(255,255,255,.18); padding:6px 12px; border-radius:20px; margin-bottom:18px; font-weight:500; }
+  .hero h1{font-size:34px; margin:0 0 12px; font-weight:700; line-height:1.2;}
+  .hero p.lead{font-size:16.5px; max-width:660px; opacity:.95; margin:0 0 20px;}
+  .hero-meta{display:flex; gap:22px; flex-wrap:wrap; font-size:13.5px; opacity:.92; margin-bottom:6px;}
+  .hero-meta span{display:flex; align-items:center; gap:8px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block; flex:none;}
+
+  .path-nav{ max-width:960px; margin:26px auto 0; position:relative; z-index:1; display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:stretch; }
+  .path-btn{ display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:14px; padding:10px 16px; backdrop-filter:blur(6px); transition:background .15s ease, transform .15s ease; }
+  .path-btn:hover{ background:rgba(255,255,255,.24); transform:translateY(-1px); }
+  .path-btn .p-arrow{ font-size:16px; flex:none; }
+  .path-btn .p-text{ display:flex; flex-direction:column; line-height:1.25; min-width:0; }
+  .path-btn .p-kicker{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; opacity:.8; }
+  .path-btn .p-title{ font-size:13.5px; font-weight:600; font-family:'Google Sans',sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .path-btn.next{ justify-content:flex-end; text-align:right; }
+  .path-btn.next .p-text{ align-items:flex-end; }
+  .path-btn.index{ justify-content:center; text-align:center; background:rgba(0,0,0,.22); border-color:rgba(255,255,255,.28); padding:10px 18px; }
+  .path-btn.index .p-text{ align-items:center; }
+
+  .layout{ max-width:1180px; margin:-8px auto 60px; padding:0 24px; display:grid; grid-template-columns:250px 1fr; gap:32px; align-items:start; }
+  nav.toc{ background:var(--paper); border-radius:16px; box-shadow:var(--card-shadow); padding:18px 10px; position:sticky; top:20px; max-height:calc(100vh - 40px); overflow:auto; }
+  nav.toc .toc-head{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); padding:6px 14px 10px; font-weight:500; display:flex; align-items:center; justify-content:space-between; }
+  nav.toc a{ display:block; padding:9px 14px; border-radius:10px; color:var(--ink); text-decoration:none; font-size:13.5px; border-left:3px solid transparent; }
+  nav.toc a:hover{background:#2c2d30;}
+  nav.toc a.active{background:#2a3a55; color:#a8c7fa; border-left-color:var(--blue); font-weight:500;}
+  nav.toc .toc-divider{ margin:10px 10px 6px; border-top:1px solid var(--line); padding-top:10px; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); font-weight:500; }
+  main{min-width:0;}
+
+  /* ===== In-page search (lives inside nav.toc — shared by desktop sidebar + mobile drawer) ===== */
+  .toc-search{ padding:4px 10px 12px; }
+  .toc-search-box{ position:relative; }
+  .toc-search input{
+    width:100%; padding:9px 34px 9px 32px; border-radius:10px; border:1px solid var(--line);
+    background:#1a1b1e; color:var(--ink); font-size:13px; box-sizing:border-box;
+  }
+  .toc-search input::placeholder{ color:var(--sub); }
+  .toc-search input:focus{ outline:none; border-color:#5f6368; }
+  .toc-search .s-icon{ position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:12px; opacity:.7; pointer-events:none; }
+  .toc-search .s-clear{
+    position:absolute; right:5px; top:50%; transform:translateY(-50%);
+    width:22px; height:22px; border-radius:6px; border:none; background:#2c2d30; color:var(--sub);
+    font-size:11px; cursor:pointer; display:none; align-items:center; justify-content:center;
+  }
+  .toc-search.has-query .s-clear{ display:flex; }
+  .toc-search-nav{
+    display:none; align-items:center; justify-content:space-between; gap:8px;
+    margin-top:8px; font-size:11.5px; color:var(--sub);
+  }
+  .toc-search-nav.show{ display:flex; }
+  .toc-search-nav .snav-btns{ display:flex; gap:4px; }
+  .toc-search-nav button{
+    width:24px; height:24px; border-radius:6px; border:1px solid var(--line); background:#1a1b1e;
+    color:var(--ink); font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .toc-search-nav button:hover{ background:#2c2d30; }
+  .toc-search-nav button:disabled{ opacity:.4; cursor:default; }
+
+  mark.search-hit{ background:#fdd663; color:#131417; padding:0 2px; border-radius:3px; }
+  mark.search-hit.active{ background:#ff9d45; box-shadow:0 0 0 2px rgba(255,157,69,.35); }
+
+  .section{ background:var(--paper); border-radius:18px; box-shadow:var(--card-shadow); padding:34px 38px; margin-bottom:26px; scroll-margin-top:84px; position:sticky; }
+  .section .kicker{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+  .kicker-left{ display:flex; align-items:center; gap:10px; }
+  .num-badge{ width:30px;height:30px;border-radius:9px; display:flex;align-items:center;justify-content:center; color:#fff; font-weight:700; font-size:14px; font-family:'Google Sans',sans-serif; flex:none; line-height:1; }
+  .section h2{font-size:23px; margin:0; font-weight:700; line-height:1.25;}
+  .section p{color:#c7cbd1; font-size:15px; margin:0 0 14px;}
+  .section p:last-child{margin-bottom:0;}
+  .lede{font-size:15.5px; color:#c7cbd1;}
+  .subhead{ font-family:'Google Sans',sans-serif; font-size:15px; font-weight:700; color:#e8eaed; margin:26px 0 10px; display:flex; align-items:center; gap:10px; }
+  .subhead:first-of-type{margin-top:6px;}
+  .subhead .sub-dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+
+  .si-toggle{ display:inline-flex; align-items:center; gap:7px; background:#2a2b2e; border:1px solid var(--line); color:#a8c7fa; font-family:'Roboto',sans-serif; font-weight:500; font-size:12.5px; padding:7px 13px; border-radius:20px; cursor:pointer; white-space:nowrap; transition:background .15s ease, border-color .15s ease; }
+  .si-toggle:hover{ background:#33343a; border-color:#5f6368; }
+  .si-toggle .flag{ font-size:13px; }
+  .si-toggle .arrow{ display:inline-block; transition:transform .2s ease; font-size:10px; }
+  .si-toggle[aria-expanded="true"] .arrow{ transform:rotate(180deg); }
+  .si-panel{ display:none; background:#1c2b22; border:1px solid #2f5b41; border-left:4px solid var(--green); border-radius:10px; padding:16px 20px; margin-top:14px; font-size:14.5px; color:#d3e9db; }
+  .si-panel.open{ display:block; animation:fadeSlide .18s ease; }
+  .si-panel p{ color:#d3e9db; font-size:14.5px; margin:0 0 10px; }
+  .si-panel p:last-child{ margin-bottom:0; }
+  .si-panel .si-label{ font-family:'Roboto',sans-serif; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:#7cc99a; font-weight:700; margin-bottom:8px; display:block; }
+  @keyframes fadeSlide{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);} }
+
+  .slide{ background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:24px 26px; margin:18px 0; position:relative; }
+  .slide::before{ content:"SLIDE"; position:absolute; top:10px; right:14px; font-size:9px; letter-spacing:.12em; color:#5f6368; font-weight:700; }
+  .slide .slide-title{ color:var(--blue); font-size:19px; font-weight:700; margin:0 0 12px; }
+  .slide ul{margin:0; padding-left:20px;}
+  .slide li{margin-bottom:8px; font-size:14.5px; color:#c7cbd1;}
+  .slide li::marker{color:var(--blue);}
+  .slide.def p{font-size:15px; color:#c7cbd1; margin:0;}
+  .slide-row{display:grid; gap:16px;}
+  .cols-2{grid-template-columns:1fr 1fr;}
+  .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .slide.accent-blue .slide-title{color:var(--blue);}
+  .slide.accent-red .slide-title{color:var(--red);}
+  .slide.accent-yellow .slide-title{color:#fdd663;}
+  .slide.accent-green .slide-title{color:var(--green);}
+  .slide.accent-purple .slide-title{color:var(--purple);}
+
+  .term{ font-family:'Roboto Mono', monospace; background:#2c2d30; color:#a8c7fa; padding:1px 6px; border-radius:5px; font-size:.92em; }
+
+  .figure{ margin:18px 0; border-radius:14px; overflow:hidden; border:1px solid var(--line); background:#000; }
+  .figure img{ display:block; width:100%; }
+  .figure figcaption{ padding:10px 16px; font-size:12.5px; color:var(--sub); background:#1a1b1e; border-top:1px solid var(--line); }
+  .figure-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:18px 0; }
+  .figure-row .figure{ margin:0; }
+
+  .callout{ background:#22344d; border-left:4px solid var(--blue); border-radius:10px; padding:14px 18px; font-size:14px; color:#a8c7fa; margin:16px 0; }
+  .callout.soc{ background:#3a2530; border-left-color:var(--red); color:#f3b8c2; }
+  .callout.cloud{ background:#1c2b3e; border-left-color:var(--purple); color:#d8c4fb; }
+
+  .purpose-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0 4px; }
+  .purpose-card{ border-radius:14px; padding:16px 14px; color:#fff; min-height:96px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 2px 6px rgba(0,0,0,.12); }
+  .purpose-card .p-name{font-family:'Google Sans',sans-serif; font-weight:700; font-size:14.5px;}
+  .purpose-card .p-focus{font-size:11.5px; opacity:.92; margin-top:6px;}
+  .p1{background:#4285F4;} .p2{background:#34A853;} .p3{background:#F09300;} .p4{background:#7B61FF;}
+
+  .glossary{display:grid; grid-template-columns:1fr 1fr; gap:0 30px;}
+  .g-item{padding:12px 0; border-bottom:1px solid var(--line);}
+  .g-item dt{font-family:'Google Sans',sans-serif; font-weight:700; font-size:14px; color:#a8c7fa;}
+  .g-item dd{margin:4px 0 0; font-size:13.5px; color:#c7cbd1;}
+
+  .exam-list{ list-style:none; margin:0; padding:0; }
+  .exam-list li{ display:flex; gap:12px; align-items:flex-start; padding:12px 4px; border-bottom:1px solid var(--line); font-size:14.5px; color:#dfe1e5; }
+  .exam-list li:last-child{ border-bottom:none; }
+  .exam-list .chk{ flex:none; width:20px; height:20px; border-radius:6px; border:2px solid var(--yellow); margin-top:2px; }
+  .exam-list b{ color:#fff; }
+
+  .role-card{ border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin-bottom:16px; background:#1a1b1e; }
+  .role-card:last-child{ margin-bottom:0; }
+  .role-card .role-title{ display:flex; align-items:center; gap:10px; font-family:'Google Sans',sans-serif; font-weight:700; font-size:15.5px; margin-bottom:8px; }
+  .role-card .role-title .ico{ width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; flex:none; color:#fff; }
+  .role-card p{ font-size:14.5px; color:#c7cbd1; margin:0; }
+
+  table.gtable{ width:100%; border-collapse:collapse; margin-top:6px; font-size:14px; min-width:480px; }
+  table.gtable th{ text-align:left; font-family:'Google Sans',sans-serif; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--sub); padding:10px 14px; border-bottom:2px solid var(--line); }
+  table.gtable td{ padding:12px 14px; border-bottom:1px solid var(--line); color:#dfe1e5; vertical-align:top; }
+  table.gtable tr:last-child td{ border-bottom:none; }
+  table.gtable td.acr{ font-family:'Roboto Mono',monospace; color:var(--blue); font-weight:700; white-space:nowrap; }
+  table.gtable td.term-full{ font-weight:600; color:#fff; white-space:nowrap; }
+
+  .table-wrap{ overflow-x:auto; margin:8px 0 4px; border:1px solid var(--line); border-radius:12px; }
+  table.ctable{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px; }
+  table.ctable th{ background:#1a1b1e; text-align:left; font-family:'Google Sans',sans-serif; font-size:12px; color:#a8c7fa; padding:12px 14px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  table.ctable td{ padding:12px 14px; border-bottom:1px solid var(--line); color:#c7cbd1; }
+  table.ctable tr:last-child td{ border-bottom:none; }
+  table.ctable td.row-head{ font-weight:700; color:#fff; white-space:nowrap; }
+  table.ctable tr:hover td{ background:#1e1f22; }
+
+  footer{ text-align:center; color:var(--sub); font-size:12.5px; padding:20px 0 50px; }
+  .back-top{ display:inline-block; margin-top:10px; font-size:12px; color:var(--blue); text-decoration:none; }
+
+  .bottom-nav{ max-width:1180px; margin:0 auto 40px; padding:0 24px; display:grid; grid-template-columns:1fr auto 1fr; gap:12px; }
+  .bottom-nav .path-btn{ color:var(--ink); background:var(--paper); border:1px solid var(--line); }
+  .bottom-nav .path-btn:hover{ background:#2c2d30; }
+  .bottom-nav .path-btn.index{ background:#1a2a45; border-color:#2a3a55; }
+
+  @media (max-width:900px){
+    .hero{padding:40px 20px 30px;} .hero h1{font-size:27px;} .hero p.lead{font-size:15px;}
+    .path-nav{grid-template-columns:1fr; }
+    .path-btn.next{ justify-content:flex-start; text-align:left; }
+    .path-btn.next .p-text{ align-items:flex-start; }
+    .layout{margin-top:8px; grid-template-columns:1fr; gap:0; padding:0 16px;}
+    nav.toc{display:none;}
+    .section{padding:26px 22px; border-radius:16px;}
+    .cols-3{grid-template-columns:1fr 1fr;}
+    .purpose-grid{grid-template-columns:repeat(2,1fr);}
+    .glossary{grid-template-columns:1fr;}
+    .figure-row{grid-template-columns:1fr;}
+    .mobile-bar{display:flex;}
+    .bottom-nav{grid-template-columns:1fr;}
+  }
+  @media (max-width:560px){
+    .hero{padding:32px 18px 26px;} .hero h1{font-size:22px;} .hero p.lead{font-size:14px;}
+    .eyebrow{font-size:10.5px; padding:5px 10px; margin-bottom:14px;}
+    .hero-meta{flex-direction:column; gap:8px; font-size:12px;}
+    .layout{padding:0 12px;}
+    .section{padding:20px 16px; margin-bottom:16px;}
+    .section h2{font-size:18px;}
+    .section .kicker{gap:8px;}
+    .num-badge{width:26px;height:26px;font-size:12px;border-radius:8px;}
+    .slide{padding:18px 16px;}
+    .slide .slide-title{font-size:16.5px;}
+    .cols-2,.cols-3{grid-template-columns:1fr;}
+    .purpose-grid{grid-template-columns:1fr 1fr; gap:10px;}
+    .purpose-card{padding:12px 10px; min-height:84px;}
+    .si-toggle{ width:100%; justify-content:center; }
+    .role-card{padding:16px 16px;}
+    .role-card .role-title{font-size:14.5px;}
+    .exam-list li{font-size:14px; padding:11px 2px; gap:10px;}
+    table.gtable, table.ctable{font-size:12.5px;}
+    table.gtable th, table.ctable th{padding:9px 10px;}
+    table.gtable td, table.ctable td{padding:9px 10px;}
+    .subhead{font-size:14px; margin:20px 0 8px;}
+    .callout{padding:12px 14px; font-size:13.5px;}
+  }
+
+  @media (max-width:900px){
+    nav.toc.drawer-open{ display:block; position:fixed; top:0; left:0; bottom:0; z-index:50; width:82%; max-width:320px; max-height:none; border-radius:0; box-shadow:2px 0 24px rgba(0,0,0,.18); padding:18px 8px 24px; animation:slideIn .22s ease; overflow:auto; }
+    nav.toc.drawer-open .toc-head{padding:8px 16px 14px;}
+    nav.toc a{padding:12px 16px; font-size:14.5px;}
+  }
+  @keyframes slideIn{ from{ transform:translateX(-100%); opacity:.4; } to{ transform:translateX(0); opacity:1; } }
+  .drawer-close{ display:none; width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:var(--paper); align-items:center; justify-content:center; cursor:pointer; font-size:16px; line-height:1; color:var(--sub); flex:none; }
+  nav.toc.drawer-open .drawer-close{display:flex;}
+  @media (max-width:400px){ nav.toc.drawer-open{width:88%;} }
+</style>
+</head>
+<body>
+
+<div class="mobile-bar" id="mobileBar">
+  <span class="m-title">1.2 Connecting Mobile Devices</span>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="toc" aria-label="Open section menu">
+    <span></span>
+  </button>
+</div>
+<div class="toc-backdrop" id="tocBackdrop"></div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">CompTIA A+ 220-1201 · Objective 1.2</span>
+    <h1>Connecting Mobile Devices</h1>
+    <p class="lead">Study notes on the wired and wireless standards used to connect phones and tablets to computers and networks — USB variants, USB-C, Apple Lightning, NFC, Bluetooth, and mobile hotspot/tethering. Tap "සිංහල" on any section to view the Sinhala translation.</p>
+    <div class="hero-meta">
+      <span><span class="dot"></span> Source: Professor Messer — CompTIA A+ Core 1 (220-1201) video course</span>
+      <span><span class="dot"></span> Includes Sinhala (සිංහල) translation toggles</span>
+    </div>
+
+    <div class="path-nav">
+      <a class="path-btn prev" href="02-laptop-hardware.html">
+        <span class="p-arrow">←</span>
+        <span class="p-text"><span class="p-kicker">Previous · 02</span><span class="p-title">Laptop Hardware</span></span>
+      </a>
+      <a class="path-btn index" href="index.html">
+        <span class="p-text"><span class="p-kicker">All topics</span><span class="p-title">🏠 Main Index</span></span>
+      </a>
+      <a class="path-btn next" href="04-mobile-device-accessories.html">
+        <span class="p-text"><span class="p-kicker">Next · 04</span><span class="p-title">Mobile Device Accessories</span></span>
+        <span class="p-arrow">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc" id="toc">
+    <div class="toc-head">On this page <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button></div>
+
+    <div class="toc-search">
+      <div class="toc-search-box">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="pageSearchInput" placeholder="Find on this page…" autocomplete="off">
+        <button class="s-clear" id="pageSearchClear" aria-label="Clear search">✕</button>
+      </div>
+      <div class="toc-search-nav" id="searchNav">
+        <span id="searchCount">0 / 0</span>
+        <div class="snav-btns">
+          <button id="searchPrev" aria-label="Previous match" disabled>‹</button>
+          <button id="searchNext" aria-label="Next match" disabled>›</button>
+        </div>
+      </div>
+    </div>
+
+    <a href="#intro">1. Why mobile devices need to connect</a>
+    <a href="#usb">2. USB standards</a>
+    <a href="#usbc">3. USB Type-C</a>
+    <a href="#lightning">4. Apple Lightning</a>
+    <a href="#connectors">5. The connector line-up, side by side</a>
+    <a href="#nfc">6. NFC — Near Field Communication</a>
+    <a href="#bluetooth">7. Bluetooth</a>
+    <a href="#hotspot">8. Hotspot &amp; tethering</a>
+    <div class="toc-divider">Beyond the lesson</div>
+    <a href="#exam">What to Remember for the Exam</a>
+    <a href="#soc">SOC Analyst — Real-World Relevance</a>
+    <a href="#cloud">Cloud Security Engineer — Real-World Relevance</a>
+    <a href="#glossary">Glossary — Acronyms &amp; Meanings</a>
+    <a href="#comparison">Comparison Tables</a>
+  </nav>
+
+  <main>
+
+    <section class="section" id="intro">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--blue)">1</div><h2>Why mobile devices need to connect</h2></div>
+        <button class="si-toggle" data-target="si-intro" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">Nearly everyone now carries a smartphone, a tablet, or both — and every one of those devices needs a way back to the computers and networks an organization already runs. The catch is that connection methods aren't standardized: different devices, different eras, and different manufacturers each favor their own wired or wireless approach.</p>
+      <p>These connections aren't only for charging. The same link is commonly reused for data synchronization, backing up what's on the device, and confirming the device's identity.</p>
+
+      <div class="purpose-grid">
+        <div class="purpose-card p1"><div class="p-name">Battery charging</div><div class="p-focus">Powering the device</div></div>
+        <div class="purpose-card p2"><div class="p-name">Synchronization</div><div class="p-focus">Keeping phone &amp; PC data aligned</div></div>
+        <div class="purpose-card p3"><div class="p-name">Data backup</div><div class="p-focus">Copying device data somewhere safe</div></div>
+        <div class="purpose-card p4"><div class="p-name">Identification</div><div class="p-focus">Confirming the device is genuinely yours</div></div>
+      </div>
+
+      <div class="figure">
+        <img src="assets/01-overview.png" alt="Connecting mobile devices — overview slide">
+        <figcaption>Overview slide: wired and wireless options change year to year, and are used for sync, connectivity, backup, and ID — sometimes all at once.</figcaption>
+      </div>
+
+      <div class="si-panel" id="si-intro">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si">නූතන ලෝකයේ සෑම පුද්ගලයෙකුම සහ ආයතනයක සිටින සෑම සාමාජිකයෙකුම පාහේ ස්මාර්ට් ජංගම දුරකථනයක් (Smartphone), ටැබ්ලට් පරිගණකයක් (Tablet) හෝ මේ දෙකම භාවිත කරයි. මෙම ජංගම උපාංග පරිගණක සහ ආයතනික ජාල (Networks) සමග සම්බන්ධ කිරීම අත්‍යවශ්‍ය වේ.</p>
+        <p class="si"><b>සබඳතාවල ප්‍රධාන අරමුණු:</b> බැටරි ආරෝපණය, දත්ත සමමුහුර්තකරණය, දත්ත උපස්ථ කිරීම, සහ උපාංග අනන්‍යතාව තහවුරු කිරීම.</p>
+      </div>
+    </section>
+
+    <section class="section" id="usb">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--green)">2</div><h2>USB standards</h2></div>
+        <button class="si-toggle" data-target="si-usb" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">USB — <span class="term">Universal Serial Bus</span> — is the most common way mobile devices have connected for years, even though the physical connector on the device end has changed over time.</p>
+
+      <div class="slide accent-green">
+        <div class="slide-title">Legacy connectors: Mini-USB &amp; Micro-USB</div>
+        <ul>
+          <li>Popular on older mobile devices; some devices still in use today still rely on them</li>
+          <li>Micro-USB is the smaller, more common of the two worldwide; Mini-USB is slightly larger</li>
+          <li>As phones got smaller, these bulkier interfaces gradually fell out of favor</li>
+          <li><b>USB Type-A</b> remains the standard large connector on the other end of the cable — the one that plugs into a desktop or laptop</li>
+        </ul>
+      </div>
+
+      <div class="figure-row">
+        <div class="figure">
+          <img src="assets/02-usb-plugs.png" alt="Micro-B, Mini-B, and Type-A USB plugs compared">
+          <figcaption>Micro-B, Mini-B, and Type-A plugs side by side.</figcaption>
+        </div>
+        <div class="figure">
+          <img src="assets/03-usb-closeup.png" alt="Close-up of Micro-B, Mini-B, and Type-A connectors">
+          <figcaption>Close-up view of the same three connector types.</figcaption>
+        </div>
+      </div>
+
+      <div class="si-panel" id="si-usb">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si">ජංගම උපාංග සම්බන්ධ කිරීම සඳහා බහුලවම භාවිත වන සම්මත ක්‍රමය වන්නේ <b>USB (Universal Serial Bus)</b> තාක්ෂණයයි.</p>
+        <p class="si"><b>මිනි USB සහ මයික්‍රෝ USB:</b> පැරණි ජංගම දුරකථන සහ උපාංග වල බහුලව භාවිත වූ අතර, තවමත් සමහර උපාංග වල දැකගත හැක. <b>USB Type-A:</b> ඩෙස්ක්ටොප් හෝ ලැප්ටොප් පරිගණක වලට සම්බන්ධ කිරීම සඳහා අනෙක් කෙළවරේ බහුලව භාවිත වන සම්මත විශාල ප්‍රමාණයේ USB පෝට් වර්ගයයි.</p>
+      </div>
+    </section>
+
+    <section class="section" id="usbc">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--blue)">3</div><h2>USB Type-C</h2></div>
+        <button class="si-toggle" data-target="si-usbc" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">Modern devices still use USB, but through a newer physical connector: USB-C. It replaces the old Type-A/Micro-B shape while staying backward-compatible with USB signaling underneath.</p>
+
+      <div class="slide def accent-blue">
+        <div class="slide-title">What makes USB-C different</div>
+        <ul>
+          <li><b>24-pin, double-sided connector</b> — plugs in either way up, no wrong orientation</li>
+          <li>Works as a USB 2.0 / 3.0 / 3.1 / 4 connection — different signal generations share the same physical shape</li>
+          <li>Can carry more than plain USB data: <b>DisplayPort</b>, <b>HDMI</b>, and <b>Thunderbolt</b> can all run over the same single cable</li>
+          <li>Higher data speeds and faster charging than older USB connector styles</li>
+        </ul>
+      </div>
+
+      <div class="figure-row">
+        <div class="figure">
+          <img src="assets/04-usbc-slide.png" alt="USB-C summary slide with Type-A and USB-C plugs">
+          <figcaption>USB-C vs. the older Type-A plug.</figcaption>
+        </div>
+        <div class="figure">
+          <img src="assets/05-usbc-closeup.png" alt="Close-up comparison of Type-A and USB-C connectors">
+          <figcaption>Close-up: Type-A's flat blade contacts vs. USB-C's oval, reversible shell.</figcaption>
+        </div>
+      </div>
+
+      <div class="si-panel" id="si-usbc">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si"><b>දෙපැත්තම භාවිත කළ හැකි සැලසුම:</b> පින් 24 කින් සමන්විත වන අතර, ඕනෑම පැත්තක් හරවා පහසුවෙන් සම්බන්ධ කළ හැක. <b>විවිධ සංඥා සම්ප්‍රේෂණය:</b> දත්ත සහ විදුලි බලය ලබාදීමට අමතරව DisplayPort, HDMI, සහ Thunderbolt වැනි විවිධ සංඥා තනි කේබලයක් හරහා සම්ප්‍රේෂණය කළ හැක. <b>ඉහළ වේගය:</b> පැරණි USB 2.0/3.0 වලට වඩා ඉහළ දත්ත හුවමාරු වේගයක් සහ වේගවත් ආරෝපණ ධාරිතාවක් සපයයි.</p>
+      </div>
+    </section>
+
+    <section class="section" id="lightning">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--red)">4</div><h2>Apple Lightning</h2></div>
+        <button class="si-toggle" data-target="si-lightning" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">Older Apple mobile devices skip USB entirely at the device end, using Apple's own proprietary connector instead.</p>
+
+      <div class="slide def accent-red">
+        <div class="slide-title">Lightning connector</div>
+        <p><b>8-pin, reversible</b> digital connector used on older iPhone and iPad devices. Compared with the Micro-USB it replaced, Lightning offered a higher power output for faster charging, could be inserted either way up, and used a simpler overall design — one reason it stayed easy to support across many device generations.</p>
+      </div>
+      <div class="callout">Industry direction: more manufacturers — including Apple on newer devices — are converging on USB-C as a single connector standard, rather than each keeping a proprietary plug.</div>
+
+      <div class="figure-row">
+        <div class="figure">
+          <img src="assets/06-lightning-slide.png" alt="Lightning connector summary slide">
+          <figcaption>Lightning: 8-pin, proprietary, reversible.</figcaption>
+        </div>
+        <div class="figure">
+          <img src="assets/07-lightning-closeup.png" alt="Close-up of a Lightning connector">
+          <figcaption>Close-up of the Lightning connector's flat 8-pin contact strip.</figcaption>
+        </div>
+      </div>
+
+      <div class="si-panel" id="si-lightning">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si">ඇපල් (Apple) සමාගම විසින් ඔවුන්ගේ පැරණි iPhone සහ iPad උපාංග සඳහා හඳුන්වා දුන් හිමිකාරීත්ව (Proprietary) සම්බන්ධකයකි. <b>පින් 8 ක සැකැස්ම:</b> දෙපැත්තම හරවා සම්බන්ධ කළ හැකි සරල සැලසුමකි. <b>වාසි:</b> පැරණි මයික්‍රෝ-USB වලට වඩා ඉහළ විදුලි බලයක් සැපයීමට සහ වේගයෙන් බැටරි ආරෝපණය කිරීමට හැකි විය. <b>නූතන ප්‍රවණතාව:</b> වර්තමානයේ බොහෝ ආයතන සහ උපාංග තනි ප්‍රමිතියක් ලෙස USB-C වෙත සංක්‍රමණය වෙමින් පවතී.</p>
+      </div>
+    </section>
+
+    <section class="section" id="connectors">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:#5f6368">5</div><h2>The connector line-up, side by side</h2></div>
+      </div>
+      <p class="lede">A quick visual comparison of the four connector tips discussed above, plus the phones they plug into — a reminder of why a tech's bag often ends up carrying several cable types at once.</p>
+      <div class="figure">
+        <img src="assets/08-connector-lineup.png" alt="Lightning, Micro-USB, Mini-USB, and USB-C connectors held side by side next to two phones">
+        <figcaption>Left to right: Lightning, Micro-USB, Mini-USB, USB-C — held next to the phones they connect to.</figcaption>
+      </div>
+    </section>
+
+    <section class="section" id="nfc">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--yellow)">6</div><h2>NFC — Near Field Communication</h2></div>
+        <button class="si-toggle" data-target="si-nfc" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">The first wireless option: a very short-range link built into most phones, tablets, and smartwatches for exchanging a small amount of data.</p>
+
+      <div class="slide accent-yellow">
+        <div class="slide-title">Where NFC shows up</div>
+        <ul>
+          <li>Mobile payments at a point-of-sale terminal</li>
+          <li>Access control — tapping a phone or watch instead of carrying a separate ID/access card</li>
+          <li>Quick information or file exchange between two phones held close together</li>
+        </ul>
+      </div>
+
+      <div class="figure">
+        <img src="assets/09-nfc-slide.png" alt="NFC summary slide">
+        <figcaption>NFC: short range, encryption-capable, doubles as a payment or identity token.</figcaption>
+      </div>
+
+      <div class="si-panel" id="si-nfc">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si">සෙන්ටිමීටර 4 ක් හෝ ඊට අඩු ඉතා කෙටි දුරක් තුළ සුළු දත්ත ප්‍රමාණයක් රැහැන් රහිතව හුවමාරු කර ගැනීමට භාවිත වේ.</p>
+        <p class="si"><b>ප්‍රධාන යෙදුම්:</b> ගෙවීම් පර්යන්ත (POS) වලදී ස්මාර්ට්ෆෝන් හෝ ස්මාර්ට් ඔරලෝසු මගින් මුදල් ගෙවීම; දොරවල් විවෘත කිරීම සහ ගොඩනැගිලි වලට ඇතුළු වීම සඳහා ප්‍රවේශ පාලනයක් ලෙස ක්‍රියා කිරීම; දුරකථන දෙකක් අතර දත්ත හුවමාරුව.</p>
+      </div>
+    </section>
+
+    <section class="section" id="bluetooth">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--blue)">7</div><h2>Bluetooth</h2></div>
+        <button class="si-toggle" data-target="si-bluetooth" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">Bluetooth trades NFC's tiny range for much higher throughput over a still-short distance — the backbone of a person's own <span class="term">Personal Area Network (PAN)</span>.</p>
+
+      <div class="slide def accent-blue">
+        <div class="slide-title">Personal Area Network (PAN)</div>
+        <p>High-speed wireless communication over short distances, built around one person's own set of devices — even though multiple phones or devices can be paired together over Bluetooth when needed.</p>
+      </div>
+      <div class="slide accent-blue">
+        <div class="slide-title">Typical Bluetooth uses</div>
+        <ul>
+          <li>Wireless headphones, headsets, keyboards, and mice</li>
+          <li>Tethering a smartphone's internet connection wirelessly</li>
+          <li>Health monitors, smartwatches, external speakers, and automobile/phone integration</li>
+        </ul>
+      </div>
+
+      <div class="figure">
+        <img src="assets/10-bluetooth-slide.png" alt="Bluetooth summary slide">
+        <figcaption>Bluetooth connects the individual's own device ecosystem — the PAN.</figcaption>
+      </div>
+
+      <div class="si-panel" id="si-bluetooth">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si">කෙටි දුරක් තුළ අධිවේගී රැහැන් රහිත සබඳතා ඇති කර ගැනීම සඳහා භාවිත වේ. <b>පුද්ගලික ප්‍රදේශ ජාල (PAN):</b> පුද්ගලයෙකු තමන් සතු උපාංග සම්බන්ධ කර ගැනීමට මෙය ප්‍රධාන වශයෙන් භාවිත කරයි.</p>
+        <p class="si"><b>පර්යන්ත උපාංග:</b> රැහැන් රහිත හෙඩ්ෆෝන්, හෙඩ්සෙට්, යතුරුපුවරු, සහ මවුස් සම්බන්ධ කිරීමට බහුලව භාවිත වේ.</p>
+      </div>
+    </section>
+
+    <section class="section" id="hotspot">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--green)">8</div><h2>Hotspot &amp; tethering</h2></div>
+        <button class="si-toggle" data-target="si-hotspot" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
+      </div>
+      <p class="lede">Both features turn a phone's cellular data into internet access for other devices — the difference is how many devices are allowed to use it at once.</p>
+
+      <div class="slide-row cols-2">
+        <div class="slide def accent-green">
+          <div class="slide-title">Mobile hotspot</div>
+          <p>The phone acts as a wireless router/access point, letting several users and devices connect over Wi-Fi at the same time.</p>
+        </div>
+        <div class="slide def accent-green">
+          <div class="slide-title">Tethering</div>
+          <p>The phone shares its internet connection with just one other device — via USB cable, Bluetooth, or Wi-Fi.</p>
+        </div>
+      </div>
+      <div class="callout">Both features depend on the phone's software and on whether the cellular carrier's data plan actually permits hotspot/tethering use — worth checking with the provider before relying on it.</div>
+
+      <div class="figure">
+        <img src="assets/11-hotspot-slide.png" alt="Hotspot and tethering summary slide">
+        <figcaption>Turning a phone into a personal Wi-Fi hotspot — availability depends on the phone and the carrier plan.</figcaption>
+      </div>
+
+      <div class="si-panel" id="si-hotspot">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si"><b>මොබයිල් හොට්ස්පොට්:</b> ජංගම දුරකථනය රැහැන් රහිත රවුටරයක් ලෙස ක්‍රියා කරමින්, එකවර පරිශීලකයින් සහ උපාංග කිහිපයකට Wi-Fi හරහා අන්තර්ජාලයට සම්බන්ධ වීමට ඉඩ සලසයි.</p>
+        <p class="si"><b>ටෙදරින්ග්:</b> ජංගම දුරකථනය තනි උපාංගයකට පමණක් USB කේබලයක්, බ්ලූටූත් හෝ Wi-Fi හරහා සම්බන්ධ කර අන්තර්ජාලය ලබාදීමේ ක්‍රමයයි. <b>සැලකිය යුතු කරුණ:</b> මෙම පහසුකම් භාවිතය ඔබගේ සේවා සැපයුම්කරු සහ සක්‍රීය දත්ත සැලැස්ම මත රඳා පවතී.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         APPENDED SECTIONS — beyond the original 8-topic lesson
+         ============================================================ -->
+
+    <section class="section" id="exam">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--yellow)">9</div><h2>What to Remember for the Exam</h2></div>
+      </div>
+      <p class="lede">The exact facts CompTIA loves to test on this objective — memorize these cold.</p>
+      <ul class="exam-list">
+        <li><span class="chk"></span><span><b>USB-C</b> = 24-pin, reversible, can carry DisplayPort/HDMI/Thunderbolt signals in addition to USB data.</span></li>
+        <li><span class="chk"></span><span><b>Lightning</b> = Apple proprietary, 8-pin, reversible — <i>not</i> a USB connector.</span></li>
+        <li><span class="chk"></span><span><b>Micro-USB</b> is smaller and more common than <b>Mini-USB</b> — know them apart on sight.</span></li>
+        <li><span class="chk"></span><span><b>NFC</b> range is roughly 4 cm or less — the shortest-range wireless tech in this objective.</span></li>
+        <li><span class="chk"></span><span><b>Bluetooth</b> = short-range, high-speed, builds a <b>PAN (Personal Area Network)</b>.</span></li>
+        <li><span class="chk"></span><span><b>Hotspot</b> = many devices at once (phone acts as a router). <b>Tethering</b> = one device only.</span></li>
+        <li><span class="chk"></span><span>Tethering can happen over <b>USB, Bluetooth, or Wi-Fi</b> — it isn't limited to a cable.</span></li>
+        <li><span class="chk"></span><span>Hotspot/tethering availability depends on the <b>carrier's data plan</b>, not just the phone's hardware.</span></li>
+        <li><span class="chk"></span><span>All of these connections can serve more than one purpose at once: <b>charging, sync, backup, identification</b>.</span></li>
+      </ul>
+    </section>
+
+    <section class="section" id="soc">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--red)">10</div><h2>SOC Analyst — Real-World Relevance</h2></div>
+      </div>
+      <p class="lede">As a SOC Analyst, this objective isn't trivia — it maps directly to alerts and policy violations you'll actually see in a ticket queue.</p>
+
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#EA4335">1</span> Rogue mobile hotspots on the corporate network</div>
+        <p>An employee's phone acting as a hotspot — or a rogue Wi-Fi access point disguised as one — can let a device bypass the corporate firewall and proxy entirely. Watch for unmanaged SSIDs and unexpected wireless clients appearing on wired segments (a classic sign of hotspot bridging).</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#EA4335">2</span> Tethering as a data-exfiltration path</div>
+        <p>A user tethering a managed laptop to a personal phone (via USB, Bluetooth, or Wi-Fi) can move data outside the org's monitored network path. DLP and endpoint logs should flag new "cellular" or personal-hotspot network adapters appearing on a managed device.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#EA4335">3</span> USB as a malware/BadUSB vector</div>
+        <p>Because USB is the universal charging/data path, it's also the universal drop point for malicious devices (rogue USB drives, BadUSB-style keystroke injectors). USB device-control policies and endpoint alerts on unrecognized USB device IDs are a direct extension of this topic.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#EA4335">4</span> NFC / Bluetooth as a proximity attack surface</div>
+        <p>Unauthorized NFC payment/access-badge cloning and unexpected Bluetooth pairing requests (bluejacking/bluesnarfing-style behavior) are proximity-based threats worth knowing when triaging a "someone tried to pair with my device" report.</p>
+      </div>
+      <div class="callout soc">SOC takeaway: this objective is background knowledge for recognizing <i>abnormal</i> connectivity — an unexpected hotspot, an unrecognized USB device ID, or an unsanctioned Bluetooth pairing attempt are all things a mature SOC alerts on.</div>
+    </section>
+
+    <section class="section" id="cloud">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:var(--purple)">11</div><h2>Cloud Security Engineer — Real-World Relevance</h2></div>
+      </div>
+      <p class="lede">On the cloud side, this objective underpins how you reason about device trust and conditional access for mobile users reaching cloud consoles and SaaS apps.</p>
+
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#7B61FF">1</span> Conditional access based on connection type</div>
+        <p>Cloud identity providers (Entra ID Conditional Access, Google Context-Aware Access, etc.) can flag or block sign-ins coming from a mobile hotspot IP range, or require step-up MFA when a device's network profile suddenly looks like tethered cellular data instead of a known corporate network.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#7B61FF">2</span> BYOD device connectivity and MDM enrollment</div>
+        <p>Whether a device connects over USB-C, Lightning, or wirelessly affects how it's provisioned and managed (MDM enrollment, certificate push, remote wipe capability) before it's trusted to reach cloud workloads — relevant when designing BYOD access policies.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#7B61FF">3</span> Physical connector standards for zero-trust hardware tokens</div>
+        <p>USB-C/Lightning port availability determines what physical security keys (FIDO2/WebAuthn hardware tokens) a mobile workforce can actually use to authenticate into cloud consoles — a practical procurement and policy constraint.</p>
+      </div>
+      <div class="role-card">
+        <div class="role-title"><span class="ico" style="background:#7B61FF">4</span> Hotspot/tethering in cloud incident response</div>
+        <p>When investigating anomalous cloud sign-ins, knowing that a login can legitimately originate from a phone's hotspot (rather than assuming compromise) helps distinguish real risk from a remote employee tethering during a network outage.</p>
+      </div>
+      <div class="callout cloud">Cloud takeaway: this objective feeds directly into conditional-access design and BYOD/MDM policy — device connectivity type is one more signal in a zero-trust access decision.</div>
+    </section>
+
+    <section class="section" id="glossary">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:#5f6368">12</div><h2>Glossary — Acronyms &amp; Meanings</h2></div>
+      </div>
+      <div class="table-wrap">
+      <table class="gtable">
+        <thead><tr><th>Acronym</th><th>Full term</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="acr">USB</td><td class="term-full">Universal Serial Bus</td><td>High-speed wired standard for charging and data transfer; comes in several connector shapes over the years.</td></tr>
+          <tr><td class="acr">—</td><td class="term-full">Micro-USB / Mini-USB</td><td>Older, smaller USB connectors used on the device end of legacy mobile devices.</td></tr>
+          <tr><td class="acr">—</td><td class="term-full">USB Type-A</td><td>The large, standard rectangular USB plug found on computers.</td></tr>
+          <tr><td class="acr">USB-C</td><td class="term-full">USB Type-C</td><td>24-pin, reversible connector; carries USB 2.0–4 plus DisplayPort/HDMI/Thunderbolt signals.</td></tr>
+          <tr><td class="acr">—</td><td class="term-full">Lightning</td><td>Apple's proprietary 8-pin reversible connector for older iPhone/iPad devices.</td></tr>
+          <tr><td class="acr">NFC</td><td class="term-full">Near Field Communication</td><td>Very short-range (~4 cm) wireless link for payments, access control, and quick data transfer.</td></tr>
+          <tr><td class="acr">—</td><td class="term-full">Bluetooth</td><td>Short-range, high-speed wireless standard powering a Personal Area Network (PAN).</td></tr>
+          <tr><td class="acr">PAN</td><td class="term-full">Personal Area Network</td><td>A person's own set of wirelessly connected devices, typically linked over Bluetooth.</td></tr>
+          <tr><td class="acr">POS</td><td class="term-full">Point of Sale</td><td>Payment terminal — a common real-world use case for NFC-based mobile payments.</td></tr>
+          <tr><td class="acr">—</td><td class="term-full">Mobile Hotspot</td><td>Phone acts as a Wi-Fi router for multiple simultaneous devices.</td></tr>
+          <tr><td class="acr">—</td><td class="term-full">Tethering</td><td>Phone shares its internet connection with a single other device.</td></tr>
+          <tr><td class="acr">MDM</td><td class="term-full">Mobile Device Management</td><td>Platform used to enroll, configure, and remotely manage/wipe mobile devices (covered in Topic 6).</td></tr>
+          <tr><td class="acr">DLP</td><td class="term-full">Data Loss Prevention</td><td>Controls that detect/block sensitive data leaving the organization, relevant to tethering-based exfiltration.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section class="section" id="comparison">
+      <div class="kicker">
+        <div class="kicker-left"><div class="num-badge" style="background:#5f6368">13</div><h2>Comparison Tables</h2></div>
+      </div>
+
+      <div class="subhead"><span class="sub-dot" style="background:var(--blue)"></span>Wired connector comparison</div>
+      <div class="table-wrap">
+        <table class="ctable">
+          <thead><tr><th>Connector</th><th>Pins</th><th>Reversible?</th><th>Owner / Standard</th><th>Typical use today</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">USB Type-A</td><td>4 (legacy)</td><td>No</td><td>Open USB standard</td><td>Host-side port on computers</td></tr>
+            <tr><td class="row-head">Mini-USB</td><td>5</td><td>No</td><td>Open USB standard</td><td>Older/legacy peripherals</td></tr>
+            <tr><td class="row-head">Micro-USB</td><td>5</td><td>No</td><td>Open USB standard</td><td>Older Android phones &amp; accessories</td></tr>
+            <tr><td class="row-head">USB-C</td><td>24</td><td>Yes</td><td>Open USB standard (USB-IF)</td><td>Current phones, tablets, laptops</td></tr>
+            <tr><td class="row-head">Lightning</td><td>8</td><td>Yes</td><td>Apple proprietary</td><td>Older iPhone/iPad devices</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="subhead" style="margin-top:30px;"><span class="sub-dot" style="background:var(--yellow)"></span>NFC vs. Bluetooth</div>
+      <div class="table-wrap">
+        <table class="ctable">
+          <thead><tr><th>Feature</th><th>NFC</th><th>Bluetooth</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">Range</td><td>~4 cm or less</td><td>Several meters (short-range PAN)</td></tr>
+            <tr><td class="row-head">Speed</td><td>Low — small data amounts</td><td>Higher — audio, file transfer, tethering</td></tr>
+            <tr><td class="row-head">Typical use</td><td>Payments, access badges, quick pairing</td><td>Headphones, keyboards, mice, tethering, health monitors</td></tr>
+            <tr><td class="row-head">Setup</td><td>Tap and go</td><td>Discovery + pairing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="subhead" style="margin-top:30px;"><span class="sub-dot" style="background:var(--green)"></span>Hotspot vs. Tethering</div>
+      <div class="table-wrap">
+        <table class="ctable">
+          <thead><tr><th>Feature</th><th>Mobile Hotspot</th><th>Tethering</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">Devices supported</td><td>Multiple, simultaneously</td><td>One device at a time</td></tr>
+            <tr><td class="row-head">Connection type</td><td>Wi-Fi only</td><td>USB, Bluetooth, or Wi-Fi</td></tr>
+            <tr><td class="row-head">Phone's role</td><td>Acts as a wireless router/AP</td><td>Acts as a direct internet bridge</td></tr>
+            <tr><td class="row-head">Depends on</td><td>Phone capability + carrier data plan</td><td>Phone capability + carrier data plan</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Personal study notes compiled from course subtitles &amp; lecture slides — CompTIA A+ 220-1201, Objective 1.2: Connecting Mobile Devices. Sinhala translations included as study aids.
+      <br><a class="back-top" href="#toc">Back to top ↑</a>
+    </footer>
+
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <a class="path-btn prev" href="02-laptop-hardware.html">
+    <span class="p-arrow">←</span>
+    <span class="p-text"><span class="p-kicker">Previous · 02</span><span class="p-title">Laptop Hardware</span></span>
+  </a>
+  <a class="path-btn index" href="index.html">
+    <span class="p-text"><span class="p-kicker">All topics</span><span class="p-title">🏠 Main Index</span></span>
+  </a>
+  <a class="path-btn next" href="04-mobile-device-accessories.html">
+    <span class="p-text"><span class="p-kicker">Next · 04</span><span class="p-title">Mobile Device Accessories</span></span>
+    <span class="p-arrow">→</span>
+  </a>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const links = document.querySelectorAll('nav.toc a[href^="#"]');
+  const map = {};
+  links.forEach(l => map[l.getAttribute('href').slice(1)] = l);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if(entry.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        if(map[id]) map[id].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+  sections.forEach(s => observer.observe(s));
+
+  const toc = document.getElementById('toc');
+  const menuBtn = document.getElementById('menuBtn');
+  const drawerClose = document.getElementById('drawerClose');
+  const backdrop = document.getElementById('tocBackdrop');
+
+  function openDrawer(){
+    toc.classList.add('drawer-open');
+    backdrop.classList.add('show');
+    menuBtn.setAttribute('aria-expanded','true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDrawer(){
+    toc.classList.remove('drawer-open');
+    backdrop.classList.remove('show');
+    menuBtn.setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn.addEventListener('click', () => {
+    toc.classList.contains('drawer-open') ? closeDrawer() : openDrawer();
+  });
+  drawerClose.addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
+  links.forEach(l => l.addEventListener('click', closeDrawer));
+  window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeDrawer(); });
+
+  window.addEventListener('resize', () => {
+    if(window.innerWidth > 900) closeDrawer();
+  });
+
+  document.querySelectorAll('.si-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.getAttribute('data-target'));
+      if(!panel) return;
+      const isOpen = panel.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+
+  // ===== In-page "find" search =====
+  (function(){
+    const input = document.getElementById('pageSearchInput');
+    const clearBtn = document.getElementById('pageSearchClear');
+    const searchBoxWrap = input.closest('.toc-search');
+    const navBar = document.getElementById('searchNav');
+    const countLabel = document.getElementById('searchCount');
+    const prevBtn = document.getElementById('searchPrev');
+    const nextBtn = document.getElementById('searchNext');
+    const mainEl = document.querySelector('main');
+
+    let matches = [];
+    let activeIndex = -1;
+    let debounceTimer = null;
+
+    function clearHighlights(){
+      mainEl.querySelectorAll('mark.search-hit').forEach(mark => {
+        const parent = mark.parentNode;
+        parent.replaceChild(document.createTextNode(mark.textContent), mark);
+        parent.normalize();
+      });
+      matches = [];
+      activeIndex = -1;
+    }
+
+    function walkAndHighlight(query){
+      const lowerQuery = query.toLowerCase();
+      const walker = document.createTreeWalker(mainEl, NodeFilter.SHOW_TEXT, {
+        acceptNode(node){
+          if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const tag = node.parentElement ? node.parentElement.tagName : '';
+          if(tag === 'SCRIPT' || tag === 'STYLE') return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      const textNodes = [];
+      let n;
+      while((n = walker.nextNode())) textNodes.push(n);
+
+      textNodes.forEach(node => {
+        const text = node.nodeValue;
+        const lowerText = text.toLowerCase();
+        if(!lowerText.includes(lowerQuery)) return;
+
+        const frag = document.createDocumentFragment();
+        let lastIndex = 0;
+        let idx = lowerText.indexOf(lowerQuery);
+
+        while(idx !== -1){
+          if(idx > lastIndex){
+            frag.appendChild(document.createTextNode(text.slice(lastIndex, idx)));
+          }
+          const mark = document.createElement('mark');
+          mark.className = 'search-hit';
+          mark.textContent = text.slice(idx, idx + query.length);
+          frag.appendChild(mark);
+          matches.push(mark);
+          lastIndex = idx + query.length;
+          idx = lowerText.indexOf(lowerQuery, lastIndex);
+        }
+        if(lastIndex < text.length){
+          frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+        }
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+
+    function revealMatch(mark){
+      const panel = mark.closest('.si-panel');
+      if(panel && !panel.classList.contains('open')){
+        panel.classList.add('open');
+        const toggleBtn = document.querySelector(`.si-toggle[data-target="${panel.id}"]`);
+        if(toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    function goToMatch(index){
+      if(matches.length === 0) return;
+      if(activeIndex >= 0 && matches[activeIndex]) matches[activeIndex].classList.remove('active');
+      activeIndex = ((index % matches.length) + matches.length) % matches.length;
+      const mark = matches[activeIndex];
+      revealMatch(mark);
+      mark.classList.add('active');
+      mark.scrollIntoView({ behavior:'smooth', block:'center' });
+      countLabel.textContent = `${activeIndex + 1} / ${matches.length}`;
+    }
+
+    function runSearch(){
+      clearHighlights();
+      const query = input.value.trim();
+      searchBoxWrap.classList.toggle('has-query', query.length > 0);
+
+      if(query.length < 2){
+        navBar.classList.remove('show');
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      walkAndHighlight(query);
+      navBar.classList.add('show');
+
+      if(matches.length === 0){
+        countLabel.textContent = '0 / 0';
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+        return;
+      }
+
+      prevBtn.disabled = false;
+      nextBtn.disabled = false;
+      goToMatch(0);
+    }
+
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(runSearch, 200);
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        if(matches.length > 0) goToMatch(activeIndex + (e.shiftKey ? -1 : 1));
+      }
+      if(e.key === 'Escape'){
+        input.value = '';
+        clearHighlights();
+        navBar.classList.remove('show');
+        searchBoxWrap.classList.remove('has-query');
+        input.blur();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => goToMatch(activeIndex - 1));
+    nextBtn.addEventListener('click', () => goToMatch(activeIndex + 1));
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      clearHighlights();
+      navBar.classList.remove('show');
+      searchBoxWrap.classList.remove('has-query');
+      input.focus();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if(e.key === '/' && document.activeElement !== input && !e.metaKey && !e.ctrlKey){
+        e.preventDefault();
+        if(window.innerWidth <= 900){ document.getElementById('menuBtn').click(); }
+        input.focus();
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
