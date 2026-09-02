@@ -43,6 +43,59 @@
   .hero-meta span{display:flex; align-items:center; gap:8px;}
   .dot{width:6px;height:6px;border-radius:50%;background:#fff;display:inline-block; flex:none;}
 
+  .hero-search-row{ margin-top:22px; display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+
+  .site-search{ position:relative; z-index:2; flex:1 1 300px; }
+  .site-search input{
+    width:100%; padding:13px 16px 13px 44px; border-radius:14px;
+    border:1px solid rgba(255,255,255,.32); background:rgba(255,255,255,.14);
+    color:#fff; font-size:14.5px; backdrop-filter:blur(6px); box-sizing:border-box;
+  }
+  .site-search input::placeholder{ color:rgba(255,255,255,.78); }
+  .site-search input:focus{ outline:none; background:rgba(255,255,255,.22); border-color:#fff; }
+  .site-search .s-icon{
+    position:absolute; left:15px; top:22px; transform:translateY(-50%);
+    font-size:14px; opacity:.85; pointer-events:none;
+  }
+  .site-search .s-clear{
+    position:absolute; right:8px; top:22px; transform:translateY(-50%);
+    width:26px; height:26px; border-radius:8px; border:none; background:rgba(255,255,255,.16);
+    color:#fff; font-size:13px; cursor:pointer; display:none; align-items:center; justify-content:center;
+  }
+  .site-search.has-query .s-clear{ display:flex; }
+  .site-search .s-dropdown{
+    display:none; position:absolute; top:calc(100% + 8px); left:0; right:0;
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--card-shadow); max-height:320px; overflow:auto; padding:6px;
+  }
+  .site-search .s-dropdown.show{ display:block; }
+  .site-search .s-item{
+    display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px;
+    color:var(--ink); text-decoration:none; font-size:13.5px; cursor:pointer;
+  }
+  .site-search .s-item:hover, .site-search .s-item.hl{ background:#2c2d30; }
+  .site-search .s-item .s-num{
+    font-family:'Roboto Mono',monospace; font-size:11px; color:var(--sub);
+    background:#1a1b1e; border-radius:6px; padding:2px 6px; flex:none; min-width:24px; text-align:center;
+  }
+  .site-search .s-empty{ padding:14px 10px; font-size:13px; color:var(--sub); text-align:center; }
+
+  .hero-find-col{ flex:1 1 300px; }
+  .hero-find-col .site-search.find-page-search{ max-width:none; }
+  .find-page-nav{
+    display:none; align-items:center; justify-content:space-between; gap:8px;
+    margin-top:8px; font-size:12px; color:rgba(255,255,255,.85);
+  }
+  .find-page-nav.show{ display:flex; }
+  .find-page-nav .snav-btns{ display:flex; gap:6px; }
+  .find-page-nav button{
+    width:26px; height:26px; border-radius:8px; border:1px solid rgba(255,255,255,.32);
+    background:rgba(255,255,255,.14); color:#fff; font-size:13px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .find-page-nav button:hover{ background:rgba(255,255,255,.24); }
+  .find-page-nav button:disabled{ opacity:.4; cursor:default; }
+
   .path-nav{ max-width:960px; margin:26px auto 0; position:relative; z-index:1; display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:stretch; }
   .path-btn{ display:flex; align-items:center; gap:10px; text-decoration:none; color:#fff; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); border-radius:14px; padding:10px 16px; backdrop-filter:blur(6px); transition:background .15s ease, transform .15s ease; }
   .path-btn:hover{ background:rgba(255,255,255,.24); transform:translateY(-1px); }
@@ -196,9 +249,11 @@
 
   @media (max-width:900px){
     .hero{padding:40px 20px 30px;} .hero h1{font-size:27px;} .hero p.lead{font-size:15px;}
+    .hero-search-row{ display:block; }
+    .hero-find-col{ margin-top:10px; }
     .path-nav{grid-template-columns:1fr; }
-    .path-btn.next{ justify-content:flex-start; text-align:left; }
-    .path-btn.next .p-text{ align-items:flex-start; }
+    .path-btn.prev, .path-btn.next{ justify-content:center; text-align:center; }
+    .path-btn.prev .p-text, .path-btn.next .p-text{ align-items:center; }
     .layout{margin-top:8px; grid-template-columns:1fr; gap:0; padding:0 16px;}
     nav.toc{display:none;}
     .section{padding:26px 22px; border-radius:16px;}
@@ -263,6 +318,30 @@
     <div class="hero-meta">
       <span><span class="dot"></span> Source: Professor Messer — CompTIA A+ Core 1 (220-1201) video course</span>
       <span><span class="dot"></span> Includes Sinhala (සිංහල) translation toggles</span>
+    </div>
+
+    <div class="hero-search-row">
+      <div class="site-search" id="siteSearch">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="topicJump" placeholder="Search topics… e.g. USB, DNS, RAID, BIOS" autocomplete="off">
+        <button class="s-clear" id="jumpClear" aria-label="Clear search">✕</button>
+        <div class="s-dropdown" id="jumpDropdown"></div>
+      </div>
+
+      <div class="hero-find-col">
+        <div class="site-search find-page-search" id="heroFindWrap">
+          <span class="s-icon">🔎</span>
+          <input type="text" id="heroFindInput" placeholder="Find on this page…" autocomplete="off">
+          <button class="s-clear" id="heroFindClear" aria-label="Clear search">✕</button>
+        </div>
+        <div class="find-page-nav" id="heroFindNav">
+          <span id="heroSearchCount">0 / 0</span>
+          <div class="snav-btns">
+            <button id="heroSearchPrev" type="button" aria-label="Previous match" disabled>‹</button>
+            <button id="heroSearchNext" type="button" aria-label="Next match" disabled>›</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="path-nav">
@@ -691,7 +770,7 @@
     </section>
 
     <footer>
-      Personal study notes compiled from course subtitles &amp; lecture slides — CompTIA A+ 220-1201, Objective 1.2: Connecting Mobile Devices. Sinhala translations included as study aids.
+      Personal study notes - CompTIA A+ 220-1201, Objective 1.2: Connecting Mobile Devices.
       <br><a class="back-top" href="#toc">Back to top ↑</a>
     </footer>
 
@@ -769,20 +848,12 @@
     });
   });
 
-  // ===== In-page "find" search =====
+  // ===== In-page "find" search (shared engine — drives both the sidebar/mobile-menu box and the hero box) =====
   (function(){
-    const input = document.getElementById('pageSearchInput');
-    const clearBtn = document.getElementById('pageSearchClear');
-    const searchBoxWrap = input.closest('.toc-search');
-    const navBar = document.getElementById('searchNav');
-    const countLabel = document.getElementById('searchCount');
-    const prevBtn = document.getElementById('searchPrev');
-    const nextBtn = document.getElementById('searchNext');
     const mainEl = document.querySelector('main');
-
     let matches = [];
     let activeIndex = -1;
-    let debounceTimer = null;
+    const uiSets = [];
 
     function clearHighlights(){
       mainEl.querySelectorAll('mark.search-hit').forEach(mark => {
@@ -846,6 +917,29 @@
       }
     }
 
+    function updateAllUI(){
+      uiSets.forEach(ui => {
+        if(matches.length === 0){
+          ui.navBar.classList.remove('show');
+          ui.prevBtn.disabled = true;
+          ui.nextBtn.disabled = true;
+          ui.countLabel.textContent = '0 / 0';
+        } else {
+          ui.navBar.classList.add('show');
+          ui.prevBtn.disabled = false;
+          ui.nextBtn.disabled = false;
+          ui.countLabel.textContent = `${activeIndex + 1} / ${matches.length}`;
+        }
+      });
+    }
+
+    function syncValue(value){
+      uiSets.forEach(ui => {
+        if(ui.input.value !== value) ui.input.value = value;
+        ui.wrap.classList.toggle('has-query', value.trim().length > 0);
+      });
+    }
+
     function goToMatch(index){
       if(matches.length === 0) return;
       if(activeIndex >= 0 && matches[activeIndex]) matches[activeIndex].classList.remove('active');
@@ -854,70 +948,240 @@
       revealMatch(mark);
       mark.classList.add('active');
       mark.scrollIntoView({ behavior:'smooth', block:'center' });
-      countLabel.textContent = `${activeIndex + 1} / ${matches.length}`;
+      updateAllUI();
     }
 
-    function runSearch(){
+    function runSearch(rawQuery){
       clearHighlights();
-      const query = input.value.trim();
-      searchBoxWrap.classList.toggle('has-query', query.length > 0);
+      const query = rawQuery.trim();
+      syncValue(rawQuery);
 
       if(query.length < 2){
-        navBar.classList.remove('show');
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
+        updateAllUI();
         return;
       }
 
       walkAndHighlight(query);
-      navBar.classList.add('show');
 
       if(matches.length === 0){
-        countLabel.textContent = '0 / 0';
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
+        updateAllUI();
         return;
       }
 
-      prevBtn.disabled = false;
-      nextBtn.disabled = false;
       goToMatch(0);
     }
 
-    input.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(runSearch, 200);
-    });
-
-    input.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        if(matches.length > 0) goToMatch(activeIndex + (e.shiftKey ? -1 : 1));
-      }
-      if(e.key === 'Escape'){
-        input.value = '';
-        clearHighlights();
-        navBar.classList.remove('show');
-        searchBoxWrap.classList.remove('has-query');
-        input.blur();
-      }
-    });
-
-    prevBtn.addEventListener('click', () => goToMatch(activeIndex - 1));
-    nextBtn.addEventListener('click', () => goToMatch(activeIndex + 1));
-    clearBtn.addEventListener('click', () => {
-      input.value = '';
+    function resetAll(){
+      syncValue('');
       clearHighlights();
-      navBar.classList.remove('show');
-      searchBoxWrap.classList.remove('has-query');
-      input.focus();
+      updateAllUI();
+    }
+
+    function bindUI(ui){
+      uiSets.push(ui);
+      let debounceTimer = null;
+
+      ui.input.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const val = ui.input.value;
+        debounceTimer = setTimeout(() => runSearch(val), 200);
+      });
+
+      ui.input.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          if(matches.length > 0) goToMatch(activeIndex + (e.shiftKey ? -1 : 1));
+        }
+        if(e.key === 'Escape'){
+          resetAll();
+          ui.input.blur();
+        }
+      });
+
+      ui.prevBtn.addEventListener('click', () => goToMatch(activeIndex - 1));
+      ui.nextBtn.addEventListener('click', () => goToMatch(activeIndex + 1));
+      ui.clearBtn.addEventListener('click', () => {
+        resetAll();
+        ui.input.focus();
+      });
+    }
+
+    bindUI({
+      input: document.getElementById('pageSearchInput'),
+      clearBtn: document.getElementById('pageSearchClear'),
+      wrap: document.getElementById('pageSearchInput').closest('.toc-search'),
+      navBar: document.getElementById('searchNav'),
+      countLabel: document.getElementById('searchCount'),
+      prevBtn: document.getElementById('searchPrev'),
+      nextBtn: document.getElementById('searchNext'),
+    });
+
+    bindUI({
+      input: document.getElementById('heroFindInput'),
+      clearBtn: document.getElementById('heroFindClear'),
+      wrap: document.getElementById('heroFindWrap'),
+      navBar: document.getElementById('heroFindNav'),
+      countLabel: document.getElementById('heroSearchCount'),
+      prevBtn: document.getElementById('heroSearchPrev'),
+      nextBtn: document.getElementById('heroSearchNext'),
     });
 
     window.addEventListener('keydown', (e) => {
-      if(e.key === '/' && document.activeElement !== input && !e.metaKey && !e.ctrlKey){
+      const focusedIsSearch = uiSets.some(ui => document.activeElement === ui.input);
+      if(e.key === '/' && !focusedIsSearch && !e.metaKey && !e.ctrlKey){
         e.preventDefault();
-        if(window.innerWidth <= 900){ document.getElementById('menuBtn').click(); }
-        input.focus();
+        document.getElementById('heroFindInput').focus();
+      }
+    });
+  })();
+
+  // ===== Global topic search (jump to any of the 63 topics from this page's hero) =====
+  (function(){
+    const TOPICS = [
+    { num:'01', title:'How to Pass Your CompTIA A+ Exams in 2026', href:'01-how-to-pass-your-comptia-a-plus-exams-in-2026.html' },
+    { num:'02', title:'Laptop Hardware', href:'02-laptop-hardware.html' },
+    { num:'03', title:'Connecting Mobile Devices', href:'03-connecting-mobile-devices.html' },
+    { num:'04', title:'Mobile Device Accessories', href:'04-mobile-device-accessories.html' },
+    { num:'05', title:'Mobile Device Networks', href:'05-mobile-device-networks.html' },
+    { num:'06', title:'Mobile Device Management', href:'06-mobile-device-management.html' },
+    { num:'07', title:'Introduction to IP', href:'07-introduction-to-ip.html' },
+    { num:'08', title:'Common Ports', href:'08-common-ports.html' },
+    { num:'09', title:'Wireless Network Technologies', href:'09-wireless-network-technologies.html' },
+    { num:'10', title:'Network Services', href:'10-network-services.html' },
+    { num:'11', title:'DNS Configuration', href:'11-dns-configuration.html' },
+    { num:'12', title:'DHCP', href:'12-dhcp.html' },
+    { num:'13', title:'VLANs and VPNs', href:'13-vlans-and-vpns.html' },
+    { num:'14', title:'Network Devices', href:'14-network-devices.html' },
+    { num:'15', title:'IPv4 and IPv6', href:'15-ipv4-and-ipv6.html' },
+    { num:'16', title:'Assigning IP Addresses', href:'16-assigning-ip-addresses.html' },
+    { num:'17', title:'Internet Connection Types', href:'17-internet-connection-types.html' },
+    { num:'18', title:'Network Types', href:'18-network-types.html' },
+    { num:'19', title:'Network Tools', href:'19-network-tools.html' },
+    { num:'20', title:'Display Types', href:'20-display-types.html' },
+    { num:'21', title:'Display Attributes', href:'21-display-attributes.html' },
+    { num:'22', title:'Network Cables', href:'22-network-cables.html' },
+    { num:'23', title:'568A and 568B Colors', href:'23-568a-and-568b-colors.html' },
+    { num:'24', title:'Optical Fiber', href:'24-optical-fiber.html' },
+    { num:'25', title:'Peripheral Cables', href:'25-peripheral-cables.html' },
+    { num:'26', title:'Video Cables', href:'26-video-cables.html' },
+    { num:'27', title:'Storage Cables', href:'27-storage-cables.html' },
+    { num:'28', title:'Adapters and Converters', href:'28-adapters-and-converters.html' },
+    { num:'29', title:'Copper Connectors', href:'29-copper-connectors.html' },
+    { num:'30', title:'Fiber Connectors', href:'30-fiber-connectors.html' },
+    { num:'31', title:'An Overview of Memory', href:'31-an-overview-of-memory.html' },
+    { num:'32', title:'Memory Technologies', href:'32-memory-technologies.html' },
+    { num:'33', title:'Storage Devices', href:'33-storage-devices.html' },
+    { num:'34', title:'RAID', href:'34-raid.html' },
+    { num:'35', title:'Motherboards', href:'35-motherboards.html' },
+    { num:'36', title:'Motherboard Expansion Slots', href:'36-motherboard-expansion-slots.html' },
+    { num:'37', title:'Motherboard Connections', href:'37-motherboard-connections.html' },
+    { num:'38', title:'Motherboard Compatibility', href:'38-motherboard-compatibility.html' },
+    { num:'39', title:'The BIOS', href:'39-the-bios.html' },
+    { num:'40', title:'BIOS Settings', href:'40-bios-settings.html' },
+    { num:'41', title:'HSM and TPM', href:'41-hsm-and-tpm.html' },
+    { num:'42', title:'CPU Features', href:'42-cpu-features.html' },
+    { num:'43', title:'Expansion Cards', href:'43-expansion-cards.html' },
+    { num:'44', title:'Cooling', href:'44-cooling.html' },
+    { num:'45', title:'Computer Power', href:'45-computer-power.html' },
+    { num:'46', title:'Multifunction Devices', href:'46-multifunction-devices.html' },
+    { num:'47', title:'Laser Printer Maintenance', href:'47-laser-printer-maintenance.html' },
+    { num:'48', title:'Inkjet Printers', href:'48-inkjet-printers.html' },
+    { num:'49', title:'Inkjet Printer Maintenance', href:'49-inkjet-printer-maintenance.html' },
+    { num:'50', title:'Thermal Printers', href:'50-thermal-printers.html' },
+    { num:'51', title:'Thermal Printer Maintenance', href:'51-thermal-printer-maintenance.html' },
+    { num:'52', title:'Impact Printers', href:'52-impact-printers.html' },
+    { num:'53', title:'Impact Printer Maintenance', href:'53-impact-printer-maintenance.html' },
+    { num:'54', title:'Virtualization Concepts', href:'54-virtualization-concepts.html' },
+    { num:'55', title:'Virtualization Services', href:'55-virtualization-services.html' },
+    { num:'56', title:'Cloud Models', href:'56-cloud-models.html' },
+    { num:'57', title:'Cloud Characteristics', href:'57-cloud-characteristics.html' },
+    { num:'58', title:'Troubleshooting Hardware', href:'58-troubleshooting-hardware.html' },
+    { num:'59', title:'Troubleshooting Storage Devices', href:'59-troubleshooting-storage-devices.html' },
+    { num:'60', title:'Troubleshooting Display Issues', href:'60-troubleshooting-display-issues.html' },
+    { num:'61', title:'Troubleshooting Mobile Devices', href:'61-troubleshooting-mobile-devices.html' },
+    { num:'62', title:'Troubleshooting Networks', href:'62-troubleshooting-networks.html' },
+    { num:'63', title:'Troubleshooting Printers', href:'63-troubleshooting-printers.html' }
+    ];
+    const CURRENT_HREF = '03-connecting-mobile-devices.html';
+
+    const jumpInput = document.getElementById('topicJump');
+    const jumpWrap = document.getElementById('siteSearch');
+    const jumpClear = document.getElementById('jumpClear');
+    const dropdown = document.getElementById('jumpDropdown');
+
+    let results = [];
+    let hlIndex = -1;
+
+    function render(query){
+      const q = query.trim().toLowerCase();
+      if(q === ''){
+        dropdown.classList.remove('show');
+        dropdown.innerHTML = '';
+        results = [];
+        hlIndex = -1;
+        return;
+      }
+
+      results = TOPICS.filter(t => t.title.toLowerCase().includes(q)).slice(0, 8);
+      hlIndex = -1;
+
+      if(results.length === 0){
+        dropdown.innerHTML = '<div class="s-empty">No topics match your search</div>';
+      } else {
+        dropdown.innerHTML = results.map((t, i) => {
+          const current = t.href === CURRENT_HREF ? ' (this page)' : '';
+          return `<a class="s-item" href="${t.href}" data-idx="${i}"><span class="s-num">${t.num}</span><span>${t.title}${current}</span></a>`;
+        }).join('');
+      }
+      dropdown.classList.add('show');
+    }
+
+    function setHighlight(i){
+      const items = dropdown.querySelectorAll('.s-item');
+      items.forEach(el => el.classList.remove('hl'));
+      if(i >= 0 && items[i]){
+        items[i].classList.add('hl');
+        items[i].scrollIntoView({ block:'nearest' });
+      }
+      hlIndex = i;
+    }
+
+    jumpInput.addEventListener('input', () => {
+      jumpWrap.classList.toggle('has-query', jumpInput.value.trim().length > 0);
+      render(jumpInput.value);
+    });
+
+    jumpInput.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowDown'){
+        e.preventDefault();
+        if(results.length) setHighlight((hlIndex + 1) % results.length);
+      } else if(e.key === 'ArrowUp'){
+        e.preventDefault();
+        if(results.length) setHighlight((hlIndex - 1 + results.length) % results.length);
+      } else if(e.key === 'Enter'){
+        if(hlIndex >= 0 && results[hlIndex]){
+          window.location.href = results[hlIndex].href;
+        } else if(results.length > 0){
+          window.location.href = results[0].href;
+        }
+      } else if(e.key === 'Escape'){
+        jumpInput.value = '';
+        jumpWrap.classList.remove('has-query');
+        render('');
+        jumpInput.blur();
+      }
+    });
+
+    jumpClear.addEventListener('click', () => {
+      jumpInput.value = '';
+      jumpWrap.classList.remove('has-query');
+      render('');
+      jumpInput.focus();
+    });
+
+    document.addEventListener('click', (e) => {
+      if(!jumpWrap.contains(e.target)){
+        dropdown.classList.remove('show');
       }
     });
   })();

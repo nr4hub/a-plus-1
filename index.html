@@ -51,7 +51,7 @@
     display:none; text-align:center; padding:40px 20px; color:var(--sub);
     background:var(--paper); border-radius:18px; box-shadow:var(--card-shadow); margin-bottom:22px;
   }
-  .no-results.show{ display:block; }
+  .no-results.show{ display:block; position:sticky; }
   .no-results .nr-title{ font-family:'Google Sans',sans-serif; font-weight:700; color:var(--ink); font-size:16px; margin-bottom:6px; }
 
   .wrap{ max-width:1100px; margin:-56px auto 60px; padding:0 24px; }
@@ -109,7 +109,6 @@
       <input type="text" id="topicSearch" placeholder="Search topics… e.g. USB, DNS, RAID, BIOS" autocomplete="off">
       <button class="s-clear" id="searchClear" aria-label="Clear search">✕</button>
     </div>
-    <div class="progress-note"><span class="dot"></span> Currently built: Topic 03 — Connecting Mobile Devices (others link here as placeholders until built)</div>
   </div>
 </div>
 
@@ -250,7 +249,7 @@
 
 </div>
 
-<footer>CompTIA A+ 220-1201 (Core 1) — personal study notes index · 63 topics</footer>
+<footer>CompTIA A+ 220-1201 (Core 1) — Personal study notes index · 63 topics</footer>
 
 <script>
   const searchInput = document.getElementById('topicSearch');
