@@ -161,6 +161,22 @@
   .subhead:first-of-type{margin-top:6px;}
   .subhead .sub-dot{ width:8px; height:8px; border-radius:50%; flex:none; }
 
+  /* ===== Collapse / expand accordion (exam, SOC, Cloud, glossary, comparison, vocab) ===== */
+  .section.collapsible .kicker{ cursor:pointer; user-select:none; }
+  .collapse-toggle{
+    display:flex; align-items:center; justify-content:center; flex:none;
+    width:32px; height:32px; border-radius:9px; border:1px solid var(--line);
+    background:#1a1b1e; color:var(--sub); cursor:pointer; padding:0;
+  }
+  .collapse-toggle:hover{ background:#2c2d30; color:var(--ink); }
+  .collapse-toggle .chevron{ display:inline-block; font-size:13px; transition:transform .25s ease; }
+  .collapse-toggle[aria-expanded="true"] .chevron{ transform:rotate(180deg); }
+  .collapse-body{
+    max-height:0; overflow:hidden; opacity:0;
+    transition:max-height .35s ease, opacity .3s ease;
+  }
+  .collapse-body.open{ opacity:1; }
+
   .si-toggle{ display:inline-flex; align-items:center; gap:7px; background:#2a2b2e; border:1px solid var(--line); color:#a8c7fa; font-family:'Roboto',sans-serif; font-weight:500; font-size:12.5px; padding:7px 13px; border-radius:20px; cursor:pointer; white-space:nowrap; transition:background .15s ease, border-color .15s ease; }
   .si-toggle:hover{ background:#33343a; border-color:#5f6368; }
   .si-toggle .flag{ font-size:13px; }
@@ -211,6 +227,33 @@
   .g-item{padding:12px 0; border-bottom:1px solid var(--line);}
   .g-item dt{font-family:'Google Sans',sans-serif; font-weight:700; font-size:14px; color:#a8c7fa;}
   .g-item dd{margin:4px 0 0; font-size:13.5px; color:#c7cbd1;}
+
+  /* ===== Sinhala Vocabulary Glossary ===== */
+  .vocab-grid{ display:flex; flex-direction:column; gap:22px; margin-top:6px; }
+  .vocab-card{ background:#1a1b1e; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  .vocab-header{ display:flex; align-items:center; gap:14px; padding:18px 22px 14px; border-bottom:1px solid var(--line); background:#202124; }
+  .vocab-word{ font-family:'Google Sans',sans-serif; font-size:21px; font-weight:700; color:#a8c7fa; }
+  .vocab-pos{ font-size:12px; color:var(--sub); font-style:italic; background:#2c2d30; padding:3px 9px; border-radius:20px; margin-left:4px; align-self:center; }
+  .vocab-body{ padding:16px 22px; }
+  .vocab-meanings{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .vocab-en{ background:#1c2b3e; border-left:3px solid var(--blue); border-radius:8px; padding:12px 14px; }
+  .vocab-si{ background:#1c2b22; border-left:3px solid var(--green); border-radius:8px; padding:12px 14px; }
+  .vocab-lang-label{ font-size:10px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; margin-bottom:6px; display:block; }
+  .vocab-en .vocab-lang-label{ color:#5b9cf8; }
+  .vocab-si .vocab-lang-label{ color:#7cc99a; }
+  .vocab-en p{ color:#a8c7fa; font-size:13.5px; margin:0; line-height:1.55; }
+  .vocab-si p{ color:#d3e9db; font-size:14.5px; margin:0; line-height:1.6; font-family:'Noto Sans Sinhala','Roboto',sans-serif; }
+  .vocab-sentences-head{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--sub); font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .vocab-sentences-head::after{ content:''; flex:1; height:1px; background:var(--line); }
+  .vocab-sentences{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+  .vocab-sentences li{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:#c7cbd1; line-height:1.55; }
+  .vocab-tag{ flex:none; font-size:9.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:2px 7px; border-radius:12px; margin-top:2px; white-space:nowrap; }
+  .tag-daily{ background:#2a2b2e; color:#9aa0a6; }
+  .tag-cyber{ background:#3a2530; color:#f3b8c2; }
+  .tag-net{ background:#1c2b3e; color:#a8c7fa; }
+  .tag-hw{ background:#2b2510; color:#fdd663; }
+  .tag-sw{ background:#1c2b22; color:#81c995; }
+  .vocab-hl{ color:#fff; font-weight:600; }
 
   .exam-list{ list-style:none; margin:0; padding:0; }
   .exam-list li{ display:flex; gap:12px; align-items:flex-start; padding:12px 4px; border-bottom:1px solid var(--line); font-size:14.5px; color:#dfe1e5; }
@@ -393,6 +436,7 @@
     <a href="#cloud">Cloud Security Engineer — Real-World Relevance</a>
     <a href="#glossary">Glossary — Acronyms &amp; Meanings</a>
     <a href="#comparison">Comparison Tables</a>
+    <a href="#sinhala-vocab">🇱🇰 Sinhala Vocabulary</a>
   </nav>
 
   <main>
@@ -629,10 +673,12 @@
          APPENDED SECTIONS — beyond the original 8-topic lesson
          ============================================================ -->
 
-    <section class="section" id="exam">
-      <div class="kicker">
+    <section class="section collapsible" id="exam">
+      <div class="kicker" data-toggle="exam">
         <div class="kicker-left"><div class="num-badge" style="background:var(--yellow)">9</div><h2>What to Remember for the Exam</h2></div>
+        <button class="collapse-toggle" id="exam-toggle" aria-expanded="false" aria-controls="exam-body" aria-label="Expand section"><span class="chevron">▾</span></button>
       </div>
+      <div class="collapse-body" id="exam-body">
       <p class="lede">The exact facts CompTIA loves to test on this objective — memorize these cold.</p>
       <ul class="exam-list">
         <li><span class="chk"></span><span><b>USB-C</b> = 24-pin, reversible, can carry DisplayPort/HDMI/Thunderbolt signals in addition to USB data.</span></li>
@@ -645,12 +691,15 @@
         <li><span class="chk"></span><span>Hotspot/tethering availability depends on the <b>carrier's data plan</b>, not just the phone's hardware.</span></li>
         <li><span class="chk"></span><span>All of these connections can serve more than one purpose at once: <b>charging, sync, backup, identification</b>.</span></li>
       </ul>
+      </div>
     </section>
 
-    <section class="section" id="soc">
-      <div class="kicker">
+    <section class="section collapsible" id="soc">
+      <div class="kicker" data-toggle="soc">
         <div class="kicker-left"><div class="num-badge" style="background:var(--red)">10</div><h2>SOC Analyst — Real-World Relevance</h2></div>
+        <button class="collapse-toggle" id="soc-toggle" aria-expanded="false" aria-controls="soc-body" aria-label="Expand section"><span class="chevron">▾</span></button>
       </div>
+      <div class="collapse-body" id="soc-body">
       <p class="lede">As a SOC Analyst, this objective isn't trivia — it maps directly to alerts and policy violations you'll actually see in a ticket queue.</p>
 
       <div class="role-card">
@@ -670,12 +719,15 @@
         <p>Unauthorized NFC payment/access-badge cloning and unexpected Bluetooth pairing requests (bluejacking/bluesnarfing-style behavior) are proximity-based threats worth knowing when triaging a "someone tried to pair with my device" report.</p>
       </div>
       <div class="callout soc">SOC takeaway: this objective is background knowledge for recognizing <i>abnormal</i> connectivity — an unexpected hotspot, an unrecognized USB device ID, or an unsanctioned Bluetooth pairing attempt are all things a mature SOC alerts on.</div>
+      </div>
     </section>
 
-    <section class="section" id="cloud">
-      <div class="kicker">
+    <section class="section collapsible" id="cloud">
+      <div class="kicker" data-toggle="cloud">
         <div class="kicker-left"><div class="num-badge" style="background:var(--purple)">11</div><h2>Cloud Security Engineer — Real-World Relevance</h2></div>
+        <button class="collapse-toggle" id="cloud-toggle" aria-expanded="false" aria-controls="cloud-body" aria-label="Expand section"><span class="chevron">▾</span></button>
       </div>
+      <div class="collapse-body" id="cloud-body">
       <p class="lede">On the cloud side, this objective underpins how you reason about device trust and conditional access for mobile users reaching cloud consoles and SaaS apps.</p>
 
       <div class="role-card">
@@ -695,12 +747,15 @@
         <p>When investigating anomalous cloud sign-ins, knowing that a login can legitimately originate from a phone's hotspot (rather than assuming compromise) helps distinguish real risk from a remote employee tethering during a network outage.</p>
       </div>
       <div class="callout cloud">Cloud takeaway: this objective feeds directly into conditional-access design and BYOD/MDM policy — device connectivity type is one more signal in a zero-trust access decision.</div>
+      </div>
     </section>
 
-    <section class="section" id="glossary">
-      <div class="kicker">
+    <section class="section collapsible" id="glossary">
+      <div class="kicker" data-toggle="glossary">
         <div class="kicker-left"><div class="num-badge" style="background:#5f6368">12</div><h2>Glossary — Acronyms &amp; Meanings</h2></div>
+        <button class="collapse-toggle" id="glossary-toggle" aria-expanded="false" aria-controls="glossary-body" aria-label="Expand section"><span class="chevron">▾</span></button>
       </div>
+      <div class="collapse-body" id="glossary-body">
       <div class="table-wrap">
       <table class="gtable">
         <thead><tr><th>Acronym</th><th>Full term</th><th>Meaning</th></tr></thead>
@@ -721,12 +776,15 @@
         </tbody>
       </table>
       </div>
+      </div>
     </section>
 
-    <section class="section" id="comparison">
-      <div class="kicker">
+    <section class="section collapsible" id="comparison">
+      <div class="kicker" data-toggle="comparison">
         <div class="kicker-left"><div class="num-badge" style="background:#5f6368">13</div><h2>Comparison Tables</h2></div>
+        <button class="collapse-toggle" id="comparison-toggle" aria-expanded="false" aria-controls="comparison-body" aria-label="Expand section"><span class="chevron">▾</span></button>
       </div>
+      <div class="collapse-body" id="comparison-body">
 
       <div class="subhead"><span class="sub-dot" style="background:var(--blue)"></span>Wired connector comparison</div>
       <div class="table-wrap">
@@ -767,7 +825,447 @@
           </tbody>
         </table>
       </div>
+      </div>
     </section>
+
+    <!-- ===== SINHALA VOCABULARY GLOSSARY ===== -->
+    <section class="section collapsible" id="sinhala-vocab" style="scroll-margin-top:84px;">
+      <div class="kicker" data-toggle="sinhala-vocab">
+        <div class="kicker-left">
+          <div class="num-badge" style="background:linear-gradient(135deg,#34A853,#1a73e8)">14</div>
+          <h2>🇱🇰 Sinhala Vocabulary — පාඩමෙහි දුෂ්කර වචන</h2>
+        </div>
+        <button class="collapse-toggle" id="sinhala-vocab-toggle" aria-expanded="false" aria-controls="sinhala-vocab-body" aria-label="Expand section"><span class="chevron">▾</span></button>
+      </div>
+      <div class="collapse-body" id="sinhala-vocab-body">
+      <p class="lede" style="margin-bottom:22px;">This lesson's difficult English words — with Sinhala meanings and example sentences from daily life, cybersecurity, networking, hardware and software fields.</p>
+
+      <div class="vocab-grid">
+
+        <!-- 1. SYNCHRONIZATION -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">synchronization</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The process of making data or settings on two or more devices match and stay updated at the same time.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>උපාංග දෙකක හෝ වැඩිගණනාවක දත්ත එකවර ගැලපීම හා යාවත්කාලීන කිරීම</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>I turned on <span class="vocab-hl">synchronization</span> so my phone contacts appear on my laptop too.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span><span class="vocab-hl">Synchronization</span> of security logs across all servers helps detect attacks early.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>NTP (Network Time Protocol) handles time <span class="vocab-hl">synchronization</span> between all network devices.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>After replacing the hard drive, <span class="vocab-hl">synchronization</span> with the backup took about two hours.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Cloud <span class="vocab-hl">synchronization</span> keeps your files identical across your phone, tablet, and PC.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 2. PROPRIETARY -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">proprietary</span>
+            <span class="vocab-pos">adjective</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>Something owned or controlled by one specific company, not shared freely — only that company makes or allows it.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>නිශ්චිත සමාගමකට පමණක් අයිති, වෙනත් කිසිවෙකුට නිදහසේ භාවිත කළ නොහැකි</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Apple's Lightning connector is a <span class="vocab-hl">proprietary</span> design — only Apple makes it.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Some firewalls use <span class="vocab-hl">proprietary</span> protocols that only work with their own hardware.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>The company switched from a <span class="vocab-hl">proprietary</span> network system to open-standard Ethernet.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>That laptop uses a <span class="vocab-hl">proprietary</span> charger, so you cannot use a standard USB-C cable.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Windows is <span class="vocab-hl">proprietary</span> software; Linux is open-source and free to use.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 3. ORIENTATION -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">orientation</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The direction or position something is facing or placed — which way is up, down, left or right when plugging in a connector.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>යමක් යොමු වී ඇති දිශාව හෝ තැබෙන ආකාරය — ඉහළ, පහළ, වම, දකුණ</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>USB-C works in any <span class="vocab-hl">orientation</span>, so you never need to flip it the right way.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Security cameras can auto-detect their <span class="vocab-hl">orientation</span> and flip the video if mounted upside down.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Antenna <span class="vocab-hl">orientation</span> affects Wi-Fi signal strength — always point it vertically for best results.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>RAM sticks must be inserted in the correct <span class="vocab-hl">orientation</span> — a notch prevents wrong installation.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Mobile apps detect screen <span class="vocab-hl">orientation</span> and switch between portrait and landscape automatically.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 4. TETHERING -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">tethering</span>
+            <span class="vocab-pos">noun / verb</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>Connecting one device to your phone so that device can use your phone's mobile internet — like connecting a laptop to your phone's data.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>ඔබේ දුරකතනයේ ජාලය තවත් උපාංගයකට (ලැප්ටොප් ආදිය) ලබා දීම</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>I used <span class="vocab-hl">tethering</span> to connect my laptop to the internet through my phone at the café.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Unauthorized <span class="vocab-hl">tethering</span> on a company phone can expose the corporate network to outside threats.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>USB <span class="vocab-hl">tethering</span> is faster and more stable than Wi-Fi hotspot for sharing mobile data.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>Some older Android phones require a special driver for USB <span class="vocab-hl">tethering</span> to work on Windows.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Your carrier's app controls whether <span class="vocab-hl">tethering</span> is allowed on your data plan.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 5. TRANSMIT -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">transmit</span>
+            <span class="vocab-pos">verb</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>To send data, signals, or information from one place or device to another.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>දත්ත, සං‍ඥා හෝ තොරතුරු එක් ස්ථානයකින් / උපාංගයකින් තවත් තැනකට යැවීම</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Bluetooth headphones <span class="vocab-hl">transmit</span> audio from your phone wirelessly.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Attackers can intercept data <span class="vocab-hl">transmitted</span> over an unsecured Wi-Fi network.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Routers <span class="vocab-hl">transmit</span> packets between networks using IP addresses as the destination.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>USB-C can <span class="vocab-hl">transmit</span> video, data, and power all through a single cable at the same time.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>The app <span class="vocab-hl">transmits</span> your location data to the server every 10 seconds in the background.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 6. MIGRATED -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">migrated</span>
+            <span class="vocab-pos">verb (past tense)</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>Moved from one system, format, or technology to a newer one — leaving the old one behind.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>පැරණි ක්‍රමයෙන් / තාක්‍ෂණයෙන් නව එකකට මාරු වීම</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Most modern phones have <span class="vocab-hl">migrated</span> away from Micro-USB to USB-C.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>The company <span class="vocab-hl">migrated</span> its security certificates from SHA-1 to the stronger SHA-256 standard.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>The office <span class="vocab-hl">migrated</span> from IPv4 to IPv6 to support more connected devices.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>We <span class="vocab-hl">migrated</span> all workstations from spinning hard drives to SSDs last year.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>The development team <span class="vocab-hl">migrated</span> the old PHP app to a modern Node.js backend.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 7. CONNECTIVITY -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">connectivity</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The ability of a device or system to connect and communicate with other devices or networks.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>උපාංගයකට හෝ පද්ධතියකට වෙනත් උපාංග හෝ ජාල සමඟ සම්බන්ධ වී සන්නිවේදනය කිරීමේ හැකියාව</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Poor <span class="vocab-hl">connectivity</span> in the basement means your calls keep dropping there.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Zero-trust security checks device <span class="vocab-hl">connectivity</span> and identity before allowing network access.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>The IT team tested <span class="vocab-hl">connectivity</span> between all branches using ping and traceroute tools.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>That motherboard offers both Wi-Fi and Ethernet <span class="vocab-hl">connectivity</span> built in.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>The app shows a red icon when <span class="vocab-hl">connectivity</span> to the cloud server is lost.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 8. MANUFACTURER -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">manufacturer</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>A company that designs and builds a product — the maker of a device, component, or hardware.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>නිෂ්පාදිතයක් නිර්මාණය කර නිෂ්පාදනය කරන සමාගම — නිෂ්පාදකයා</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Samsung is the <span class="vocab-hl">manufacturer</span> of both the phone and the screen inside it.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Always apply <span class="vocab-hl">manufacturer</span>-released firmware updates to fix security vulnerabilities in your router.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Different <span class="vocab-hl">manufacturers</span> use different default passwords — always change them after setup.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>The <span class="vocab-hl">manufacturer</span> warranty covers defects for one year from the purchase date.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Check the <span class="vocab-hl">manufacturer</span>'s website for the latest driver before reporting a hardware bug.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 9. FUNCTIONALITY -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">functionality</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The range of functions or features that a system, device, or software is able to perform.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>උපාංගයකට හෝ මෘදුකාංගයකට ඉටු කළ හැකි කාර්යයන් / විශේෂාංගවල ගණන හා ස්වභාවය</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Hotspot <span class="vocab-hl">functionality</span> lets you share your phone data with other people nearby.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Disabling unused <span class="vocab-hl">functionality</span> on servers reduces the attack surface for hackers.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>The new router firmware added VPN <span class="vocab-hl">functionality</span> that was not there before.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>The faulty RAM chip limited the <span class="vocab-hl">functionality</span> of the entire system until replaced.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>The free version has limited <span class="vocab-hl">functionality</span> — you need a paid plan for advanced features.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 10. INTERFACE -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">interface</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The point or method of connection between two systems, devices, or between a user and a machine — physical (a port) or visual (a screen).</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>පද්ධති දෙකක් අතර හෝ පරිශීලකයා සහ යන්ත්‍රය අතර සම්බන්ධ වන ස්ථානය හෝ ක්‍රමය (port, screen ආදිය)</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>The USB port on the side of the laptop is a physical <span class="vocab-hl">interface</span> for connecting devices.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Attackers often target the management <span class="vocab-hl">interface</span> of routers to gain administrator access.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Each network card has a separate <span class="vocab-hl">interface</span> with its own IP address assigned by the router.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>SATA is the <span class="vocab-hl">interface</span> standard used to connect hard drives to a motherboard.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>A good user <span class="vocab-hl">interface</span> makes the app easy to learn even for beginners.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 11. RELATIVELY -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">relatively</span>
+            <span class="vocab-pos">adverb</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>Compared to something else — not absolutely, but when you compare it to other things of the same type.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>වෙනත් දෙයක් හා සැසඳීමේදී — සාපේක්ෂව, සසඳා බලන විට</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Bluetooth is <span class="vocab-hl">relatively</span> easy to set up compared to a wired connection.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>NFC attacks are <span class="vocab-hl">relatively</span> rare because the attacker must be very close to the victim.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Wi-Fi 6 is <span class="vocab-hl">relatively</span> new, but many devices already support it.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>SSDs are <span class="vocab-hl">relatively</span> expensive compared to hard drives, but much faster.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Python is <span class="vocab-hl">relatively</span> simple to learn as a first programming language.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 12. IDENTIFICATION -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">identification</span>
+            <span class="vocab-pos">noun</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The process of proving or recognizing who someone is or what something is — confirming an identity.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>කෙනෙකුගේ හෝ දෙයකගේ අනන්‍යතාව සනාථ කිරීම හෝ හඳුනා ගැනීම</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>You need an <span class="vocab-hl">identification</span> card to enter the government building.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>NFC is used for <span class="vocab-hl">identification</span> — tap your badge to unlock the server room door.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>MAC address <span class="vocab-hl">identification</span> allows the router to recognize each device on the network.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>Device <span class="vocab-hl">identification</span> numbers (serial numbers) help track hardware in a company inventory.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Two-factor authentication adds a second layer of <span class="vocab-hl">identification</span> beyond just a password.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 13. STANDARD -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">standard</span>
+            <span class="vocab-pos">noun / adjective</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>An agreed rule or specification that many manufacturers follow so that their products work together. Something that is normal or widely accepted.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>නිෂ්පාදකයන් අනුගමනය කරන එකඟ වූ නිර්ණායකය හෝ රීතිය — සාමාන්‍ය ලෙස පිළිගත් දෙය</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>USB is a <span class="vocab-hl">standard</span> connector, so it works with almost any computer brand.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>AES-256 is the <span class="vocab-hl">standard</span> encryption algorithm recommended for protecting sensitive data.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>IEEE 802.11 is the <span class="vocab-hl">standard</span> that defines how Wi-Fi devices communicate.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>ATX is the <span class="vocab-hl">standard</span> form factor for desktop PC motherboards and cases.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>REST is the <span class="vocab-hl">standard</span> approach most developers use for building web APIs today.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 14. CAPABILITIES -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">capabilities</span>
+            <span class="vocab-pos">noun (plural)</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>The things a device, person, or system is able to do — its powers or features.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>උපාංගයකට, පුද්ගලයෙකුට හෝ පද්ධතියකට කළ හැකි දේවල් — ඒවායේ හැකියාවන් හා විශේෂාංග</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>Hotspot <span class="vocab-hl">capabilities</span> depend on your phone model and your carrier's data plan.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>Understanding the attacker's <span class="vocab-hl">capabilities</span> helps you plan better defenses for your network.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Wi-Fi 6 routers have better multi-device <span class="vocab-hl">capabilities</span> than older Wi-Fi 5 routers.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>Check the GPU's <span class="vocab-hl">capabilities</span> before buying — not all cards support 4K gaming.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Modern IDEs have powerful debugging <span class="vocab-hl">capabilities</span> that help find bugs quickly.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 15. PERIPHERAL -->
+        <div class="vocab-card">
+          <div class="vocab-header">
+            <span class="vocab-word">peripheral</span>
+            <span class="vocab-pos">noun / adjective</span>
+          </div>
+          <div class="vocab-body">
+            <div class="vocab-meanings">
+              <div class="vocab-en">
+                <span class="vocab-lang-label">🇬🇧 English</span>
+                <p>An external device that connects to a computer or phone to add extra function — like a keyboard, mouse, headset or printer.</p>
+              </div>
+              <div class="vocab-si">
+                <span class="vocab-lang-label">🇱🇰 සිංහල</span>
+                <p>පරිගණකයකට හෝ දුරකතනයකට සම්බන්ධ කරන බාහිර උපාංගය — යතුරුලියනය, මූසිකය, හෙඩ්සෙට් ආදිය</p>
+              </div>
+            </div>
+            <div class="vocab-sentences-head">Sample Sentences</div>
+            <ul class="vocab-sentences">
+              <li><span class="vocab-tag tag-daily">Daily</span><span>A wireless keyboard is a Bluetooth <span class="vocab-hl">peripheral</span> that connects to your computer without a cable.</span></li>
+              <li><span class="vocab-tag tag-cyber">Cyber</span><span>A malicious USB <span class="vocab-hl">peripheral</span> can inject keystrokes and steal data in seconds — never plug in unknown drives.</span></li>
+              <li><span class="vocab-tag tag-net">Network</span><span>Some network printers act as a shared <span class="vocab-hl">peripheral</span> that all office computers can use.</span></li>
+              <li><span class="vocab-tag tag-hw">Hardware</span><span>USB hubs let you connect multiple <span class="vocab-hl">peripherals</span> when your laptop has only one port.</span></li>
+              <li><span class="vocab-tag tag-sw">Software</span><span>Device drivers are software that let the operating system communicate with each <span class="vocab-hl">peripheral</span>.</span></li>
+            </ul>
+          </div>
+        </div>
+
+      </div><!-- /vocab-grid -->
+      </div><!-- /collapse-body -->
+    </section>
+    <!-- ===== END SINHALA VOCABULARY GLOSSARY ===== -->
 
     <footer>
       Personal study notes - CompTIA A+ 220-1201, Objective 1.2: Connecting Mobile Devices.
@@ -848,6 +1346,104 @@
     });
   });
 
+  // ===== Collapse / expand accordion (exam, SOC, Cloud, glossary, comparison, vocab) =====
+  (function(){
+    const GROUP_IDS = ['exam', 'soc', 'cloud', 'glossary', 'comparison', 'sinhala-vocab'];
+    const items = GROUP_IDS.map(id => ({
+      id,
+      section: document.getElementById(id),
+      body: document.getElementById(`${id}-body`),
+      toggle: document.getElementById(`${id}-toggle`),
+    })).filter(item => item.section && item.body && item.toggle);
+
+    function openItem(item, animate){
+      item.body.classList.add('open');
+      item.toggle.setAttribute('aria-expanded', 'true');
+      if(animate === false){
+        item.body.style.maxHeight = 'none';
+        return;
+      }
+      item.body.style.maxHeight = item.body.scrollHeight + 'px';
+      const onEnd = (e) => {
+        if(e.propertyName !== 'max-height') return;
+        item.body.style.maxHeight = 'none';
+        item.body.removeEventListener('transitionend', onEnd);
+      };
+      item.body.addEventListener('transitionend', onEnd);
+    }
+
+    function closeItem(item){
+      if(!item.body.classList.contains('open')) return;
+      const current = item.body.scrollHeight;
+      item.body.style.maxHeight = current + 'px';
+      // force reflow so the browser registers the numeric max-height before collapsing to 0
+      // eslint-disable-next-line no-unused-expressions
+      item.body.offsetHeight;
+      requestAnimationFrame(() => {
+        item.body.style.maxHeight = '0px';
+      });
+      item.body.classList.remove('open');
+      item.toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleItem(id){
+      const clicked = items.find(i => i.id === id);
+      if(!clicked) return;
+      const isOpen = clicked.body.classList.contains('open');
+      items.forEach(i => { if(i !== clicked) closeItem(i); });
+      if(isOpen){
+        closeItem(clicked);
+      } else {
+        openItem(clicked, true);
+      }
+    }
+
+    items.forEach(item => {
+      item.toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleItem(item.id);
+      });
+      item.section.querySelector('.kicker').addEventListener('click', () => toggleItem(item.id));
+    });
+
+    // Expose so the search engine (and TOC deep-links) can force a section open
+    window.__openAccordionSection = function(id){
+      const item = items.find(i => i.id === id);
+      if(!item) return;
+      if(!item.body.classList.contains('open')){
+        items.forEach(i => { if(i !== item) closeItem(i); });
+        openItem(item, true);
+      }
+    };
+
+    // Deep-link support: if the page loads with #exam / #glossary / etc. in the URL,
+    // open that section and scroll to it.
+    if(location.hash){
+      const targetId = location.hash.slice(1);
+      if(GROUP_IDS.includes(targetId)){
+        window.__openAccordionSection(targetId);
+        requestAnimationFrame(() => {
+          document.getElementById(targetId).scrollIntoView({ block:'start' });
+        });
+      }
+    }
+
+    // TOC links to these sections should open them (and scroll) instead of
+    // just jumping to a collapsed, empty-looking header.
+    document.querySelectorAll('nav.toc a[href^="#"]').forEach(link => {
+      const id = link.getAttribute('href').slice(1);
+      if(!GROUP_IDS.includes(id)) return;
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.__openAccordionSection(id);
+        history.pushState(null, '', '#' + id);
+        requestAnimationFrame(() => {
+          document.getElementById(id).scrollIntoView({ behavior:'smooth', block:'start' });
+        });
+      });
+    });
+  })();
+
   // ===== In-page "find" search (shared engine — drives both the sidebar/mobile-menu box and the hero box) =====
   (function(){
     const mainEl = document.querySelector('main');
@@ -914,6 +1510,12 @@
         panel.classList.add('open');
         const toggleBtn = document.querySelector(`.si-toggle[data-target="${panel.id}"]`);
         if(toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      }
+
+      const collapseBody = mark.closest('.collapse-body');
+      if(collapseBody && !collapseBody.classList.contains('open') && window.__openAccordionSection){
+        const sectionId = collapseBody.closest('.section')?.id;
+        if(sectionId) window.__openAccordionSection(sectionId);
       }
     }
 
