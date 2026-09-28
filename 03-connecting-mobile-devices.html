@@ -178,6 +178,8 @@
   .collapse-body.open{ opacity:1; }
 
   .si-toggle{ display:inline-flex; align-items:center; gap:7px; background:#2a2b2e; border:1px solid var(--line); color:#a8c7fa; font-family:'Roboto',sans-serif; font-weight:500; font-size:12.5px; padding:7px 13px; border-radius:20px; cursor:pointer; white-space:nowrap; transition:background .15s ease, border-color .15s ease; }
+  .si-divider{ display:flex; align-items:center; gap:14px; margin:26px 0 0; }
+  .si-divider::before, .si-divider::after{ content:''; flex:1; height:1px; background:var(--line); }
   .si-toggle:hover{ background:#33343a; border-color:#5f6368; }
   .si-toggle .flag{ font-size:13px; }
   .si-toggle .arrow{ display:inline-block; transition:transform .2s ease; font-size:10px; }
@@ -321,7 +323,6 @@
     .cols-2,.cols-3{grid-template-columns:1fr;}
     .purpose-grid{grid-template-columns:1fr 1fr; gap:10px;}
     .purpose-card{padding:12px 10px; min-height:84px;}
-    .si-toggle{ width:100%; justify-content:center; }
     .role-card{padding:16px 16px;}
     .role-card .role-title{font-size:14.5px;}
     .exam-list li{font-size:14px; padding:11px 2px; gap:10px;}
@@ -444,7 +445,6 @@
     <section class="section" id="intro">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--blue)">1</div><h2>Why mobile devices need to connect</h2></div>
-        <button class="si-toggle" data-target="si-intro" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">Nearly everyone now carries a smartphone, a tablet, or both — and every one of those devices needs a way back to the computers and networks an organization already runs. The catch is that connection methods aren't standardized: different devices, different eras, and different manufacturers each favor their own wired or wireless approach.</p>
       <p>These connections aren't only for charging. The same link is commonly reused for data synchronization, backing up what's on the device, and confirming the device's identity.</p>
@@ -461,6 +461,7 @@
         <figcaption>Overview slide: wired and wireless options change year to year, and are used for sync, connectivity, backup, and ID — sometimes all at once.</figcaption>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-intro" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-intro">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si">නූතන ලෝකයේ සෑම පුද්ගලයෙකුම සහ ආයතනයක සිටින සෑම සාමාජිකයෙකුම පාහේ ස්මාර්ට් ජංගම දුරකථනයක් (Smartphone), ටැබ්ලට් පරිගණකයක් (Tablet) හෝ මේ දෙකම භාවිත කරයි. මෙම ජංගම උපාංග පරිගණක සහ ආයතනික ජාල (Networks) සමග සම්බන්ධ කිරීම අත්‍යවශ්‍ය වේ.</p>
@@ -471,7 +472,6 @@
     <section class="section" id="usb">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--green)">2</div><h2>USB standards</h2></div>
-        <button class="si-toggle" data-target="si-usb" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">USB — <span class="term">Universal Serial Bus</span> — is the most common way mobile devices have connected for years, even though the physical connector on the device end has changed over time.</p>
 
@@ -496,6 +496,7 @@
         </div>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-usb" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-usb">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si">ජංගම උපාංග සම්බන්ධ කිරීම සඳහා බහුලවම භාවිත වන සම්මත ක්‍රමය වන්නේ <b>USB (Universal Serial Bus)</b> තාක්ෂණයයි.</p>
@@ -506,7 +507,6 @@
     <section class="section" id="usbc">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--blue)">3</div><h2>USB Type-C</h2></div>
-        <button class="si-toggle" data-target="si-usbc" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">Modern devices still use USB, but through a newer physical connector: USB-C. It replaces the old Type-A/Micro-B shape while staying backward-compatible with USB signaling underneath.</p>
 
@@ -531,6 +531,7 @@
         </div>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-usbc" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-usbc">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si"><b>දෙපැත්තම භාවිත කළ හැකි සැලසුම:</b> පින් 24 කින් සමන්විත වන අතර, ඕනෑම පැත්තක් හරවා පහසුවෙන් සම්බන්ධ කළ හැක. <b>විවිධ සංඥා සම්ප්‍රේෂණය:</b> දත්ත සහ විදුලි බලය ලබාදීමට අමතරව DisplayPort, HDMI, සහ Thunderbolt වැනි විවිධ සංඥා තනි කේබලයක් හරහා සම්ප්‍රේෂණය කළ හැක. <b>ඉහළ වේගය:</b> පැරණි USB 2.0/3.0 වලට වඩා ඉහළ දත්ත හුවමාරු වේගයක් සහ වේගවත් ආරෝපණ ධාරිතාවක් සපයයි.</p>
@@ -540,7 +541,6 @@
     <section class="section" id="lightning">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--red)">4</div><h2>Apple Lightning</h2></div>
-        <button class="si-toggle" data-target="si-lightning" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">Older Apple mobile devices skip USB entirely at the device end, using Apple's own proprietary connector instead.</p>
 
@@ -561,6 +561,7 @@
         </div>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-lightning" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-lightning">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si">ඇපල් (Apple) සමාගම විසින් ඔවුන්ගේ පැරණි iPhone සහ iPad උපාංග සඳහා හඳුන්වා දුන් හිමිකාරීත්ව (Proprietary) සම්බන්ධකයකි. <b>පින් 8 ක සැකැස්ම:</b> දෙපැත්තම හරවා සම්බන්ධ කළ හැකි සරල සැලසුමකි. <b>වාසි:</b> පැරණි මයික්‍රෝ-USB වලට වඩා ඉහළ විදුලි බලයක් සැපයීමට සහ වේගයෙන් බැටරි ආරෝපණය කිරීමට හැකි විය. <b>නූතන ප්‍රවණතාව:</b> වර්තමානයේ බොහෝ ආයතන සහ උපාංග තනි ප්‍රමිතියක් ලෙස USB-C වෙත සංක්‍රමණය වෙමින් පවතී.</p>
@@ -576,12 +577,18 @@
         <img src="assets/08-connector-lineup.png" alt="Lightning, Micro-USB, Mini-USB, and USB-C connectors held side by side next to two phones">
         <figcaption>Left to right: Lightning, Micro-USB, Mini-USB, USB-C — held next to the phones they connect to.</figcaption>
       </div>
+
+      <div class="si-divider"><button class="si-toggle" data-target="si-connectors" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
+      <div class="si-panel" id="si-connectors">
+        <span class="si-label">සිංහල පරිවර්තනය</span>
+        <p class="si">ඉහත සාකච්ඡා කළ සම්බන්ධක හතරක් (<b>Lightning, Micro-USB, Mini-USB, USB-C</b>) සහ ඒවා සම්බන්ධ වන දුරකථන සමඟ පැත්තෙන් පැත්තට දෘශ්‍ය සැසඳීමකි.</p>
+        <p class="si">තාක්ෂණික විශේෂඥයෙකුගේ බෑගයේ බොහෝ විට කේබල් වර්ග කිහිපයක් එකවර රැගෙන යාමට සිදුවන්නේ ඇයි යන්න මෙයින් මතක් කරයි.</p>
+      </div>
     </section>
 
     <section class="section" id="nfc">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--yellow)">6</div><h2>NFC — Near Field Communication</h2></div>
-        <button class="si-toggle" data-target="si-nfc" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">The first wireless option: a very short-range link built into most phones, tablets, and smartwatches for exchanging a small amount of data.</p>
 
@@ -599,6 +606,7 @@
         <figcaption>NFC: short range, encryption-capable, doubles as a payment or identity token.</figcaption>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-nfc" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-nfc">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si">සෙන්ටිමීටර 4 ක් හෝ ඊට අඩු ඉතා කෙටි දුරක් තුළ සුළු දත්ත ප්‍රමාණයක් රැහැන් රහිතව හුවමාරු කර ගැනීමට භාවිත වේ.</p>
@@ -609,7 +617,6 @@
     <section class="section" id="bluetooth">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--blue)">7</div><h2>Bluetooth</h2></div>
-        <button class="si-toggle" data-target="si-bluetooth" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">Bluetooth trades NFC's tiny range for much higher throughput over a still-short distance — the backbone of a person's own <span class="term">Personal Area Network (PAN)</span>.</p>
 
@@ -631,6 +638,7 @@
         <figcaption>Bluetooth connects the individual's own device ecosystem — the PAN.</figcaption>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-bluetooth" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-bluetooth">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si">කෙටි දුරක් තුළ අධිවේගී රැහැන් රහිත සබඳතා ඇති කර ගැනීම සඳහා භාවිත වේ. <b>පුද්ගලික ප්‍රදේශ ජාල (PAN):</b> පුද්ගලයෙකු තමන් සතු උපාංග සම්බන්ධ කර ගැනීමට මෙය ප්‍රධාන වශයෙන් භාවිත කරයි.</p>
@@ -641,7 +649,6 @@
     <section class="section" id="hotspot">
       <div class="kicker">
         <div class="kicker-left"><div class="num-badge" style="background:var(--green)">8</div><h2>Hotspot &amp; tethering</h2></div>
-        <button class="si-toggle" data-target="si-hotspot" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button>
       </div>
       <p class="lede">Both features turn a phone's cellular data into internet access for other devices — the difference is how many devices are allowed to use it at once.</p>
 
@@ -662,6 +669,7 @@
         <figcaption>Turning a phone into a personal Wi-Fi hotspot — availability depends on the phone and the carrier plan.</figcaption>
       </div>
 
+      <div class="si-divider"><button class="si-toggle" data-target="si-hotspot" aria-expanded="false"><span class="flag">🇱🇰</span> සිංහල <span class="arrow">▾</span></button></div>
       <div class="si-panel" id="si-hotspot">
         <span class="si-label">සිංහල පරිවර්තනය</span>
         <p class="si"><b>මොබයිල් හොට්ස්පොට්:</b> ජංගම දුරකථනය රැහැන් රහිත රවුටරයක් ලෙස ක්‍රියා කරමින්, එකවර පරිශීලකයින් සහ උපාංග කිහිපයකට Wi-Fi හරහා අන්තර්ජාලයට සම්බන්ධ වීමට ඉඩ සලසයි.</p>
